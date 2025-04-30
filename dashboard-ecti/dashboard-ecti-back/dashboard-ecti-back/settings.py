@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,12 @@ WSGI_APPLICATION = 'dashboard_ecti_back.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # ou 'django.db.backends.postgresql'
+        'NAME': 'nom_de_ta_bdd',
+        'USER': 'user_readonly',
+        'PASSWORD': 'password_readonly',
+        'HOST': 'adresse_du_serveur_distant',  # par ex. "192.168.1.100" ou "bdd.exemple.com"
+        'PORT': '3306',
     }
 }
 

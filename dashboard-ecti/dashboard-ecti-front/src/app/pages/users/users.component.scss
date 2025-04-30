@@ -1,0 +1,17 @@
+/* src/app/pages/users/users.component.scss */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    border-bottom: 2px solid #e0e0e0;
+  }
+  

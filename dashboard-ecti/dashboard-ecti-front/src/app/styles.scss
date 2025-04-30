@@ -1,0 +1,95 @@
+/* src/styles.scss */
+
+/* 1. Import Angular Material theming API */
+@import '~@angular/material/theming';
+@include mat-core();
+
+/* 2. Définition des palettes ECTI */
+$ecti-primary: mat-palette($mat-red, 700);
+$ecti-accent:  mat-palette($mat-green, A400, A200, A700);
+$ecti-warn:    mat-palette($mat-orange, 600);
+
+/* 3. Création et application du thème */
+$ecti-theme: mat-light-theme($ecti-primary, $ecti-accent, $ecti-warn);
+@include angular-material-theme($ecti-theme);
+
+/* 4. Variables globales */
+$side-nav-width: 240px;
+$header-height: 60px;
+$font-main: 'Roboto', sans-serif;
+$font-logo: 'Permanent Marker', cursive;
+$gray-light: #f7f7f7;
+
+/* 5. Reset et body */
+body {
+  margin: 0;
+  font-family: $font-main;
+  background-color: $gray-light;
+}
+
+/* 6. Layout principal */
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mat-sidenav {
+  width: $side-nav-width;
+  background-color: mat-color($ecti-primary);
+  color: white;
+  padding-top: 1rem;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: $header-height;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+  font-family: $font-logo;
+  font-size: 1.5rem;
+  color: mat-color($ecti-primary, 800);
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* 7. Cartes et panels */
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* 8. Form controls */
+.mat-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* 9. Listes */
+.list-panel {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.list-panel li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}

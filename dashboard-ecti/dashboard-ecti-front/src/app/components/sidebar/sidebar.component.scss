@@ -1,0 +1,14 @@
+/* src/app/components/sidebar/sidebar.component.scss */
+.logo {
+    font-family: 'Permanent Marker', cursive;
+    margin: 16px 0;
+    text-align: center;
+  }
+  mat-list-item {
+    cursor: pointer;
+    font-size: 14px;
+  }
+  mat-icon {
+    margin-right: 8px;
+  }
+  
