@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 import environ
 
@@ -38,14 +38,15 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'api',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "corsheaders",
+    "rest_framework",
+    "api",
     
 ]
 
@@ -53,12 +54,15 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'dashboard_ecti_back.urls'
 
@@ -84,7 +88,7 @@ WSGI_APPLICATION = 'dashboard_ecti_back.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-COMMON = {
+COMMON_MYSQL = {
     "ENGINE": "django.db.backends.mysql",
     "USER":   env("DB_USER"),
     "PASSWORD": env("DB_PASSWORD"),
@@ -95,35 +99,38 @@ COMMON = {
 
 DATABASES = {
     "default": {
-        **COMMON,
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "django.sqlite3",
+    },
+    "ecti": {
+        **COMMON_MYSQL,
         "NAME": env("DB_ECTI"),
     },
-
     # seconde base : infolocales
     "infolocales": {
-        **COMMON,
+        **COMMON_MYSQL,
         "NAME": env("DB_INFOLOCALES"),
-        "HOST": env("DB_INFOLOCALES_HOST", default=COMMON["HOST"]),
-        "USER": env("DB_INFOLOCALES_USER", default=COMMON["USER"]),
-        "PASSWORD": env("DB_INFOLOCALES_PASSWORD", default=COMMON["PASSWORD"]),
+        "HOST": env("DB_INFOLOCALES_HOST", default=COMMON_MYSQL["HOST"]),
+        "USER": env("DB_INFOLOCALES_USER", default=COMMON_MYSQL["USER"]),
+        "PASSWORD": env("DB_INFOLOCALES_PASSWORD", default=COMMON_MYSQL["PASSWORD"]),
     },
 
     # troisième base : tablecti
     "tablecti": {
-        **COMMON,
+        **COMMON_MYSQL,
         "NAME": env("DB_TABLECTI"),
-        "HOST": env("DB_TABLECTI_HOST", default=COMMON["HOST"]),
-        "USER": env("DB_TABLECTI_USER", default=COMMON["USER"]),
-        "PASSWORD": env("DB_TABLECTI_PASSWORD", default=COMMON["PASSWORD"]),
+        "HOST": env("DB_TABLECTI_HOST", default=COMMON_MYSQL["HOST"]),
+        "USER": env("DB_TABLECTI_USER", default=COMMON_MYSQL["USER"]),
+        "PASSWORD": env("DB_TABLECTI_PASSWORD", default=COMMON_MYSQL["PASSWORD"]),
     },
 
     # quatrième base : tstatic
     "tstatic": {
-        **COMMON,
+        **COMMON_MYSQL,
         "NAME": env("DB_TSTATIC"),
-        "HOST": env("DB_TSTATIC_HOST", default=COMMON["HOST"]),
-        "USER": env("DB_TSTATIC_USER", default=COMMON["USER"]),
-        "PASSWORD": env("DB_TSTATIC_PASSWORD", default=COMMON["PASSWORD"]),
+        "HOST": env("DB_TSTATIC_HOST", default=COMMON_MYSQL["HOST"]),
+        "USER": env("DB_TSTATIC_USER", default=COMMON_MYSQL["USER"]),
+        "PASSWORD": env("DB_TSTATIC_PASSWORD", default=COMMON_MYSQL["PASSWORD"]),
     },
 }
 
@@ -169,9 +176,22 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MIGRATION_MODULES = {
-    "auth":   None,
-    "admin":  None,
+REST_FRAMEWORK = {
+    # on n'autorise plus que le JSONRenderer
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    # (optionnel) vous pouvez aussi désactiver le parsers HTML
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
 }
 
-DATABASE_ROUTERS = ['dashboard_ecti_back.database_router.EctiRouter']
+DATABASE_ROUTERS = ["dashboard_ecti_back.database_router.ECTIRouter"]
+
+from django.db.models.signals import post_migrate
+from django.contrib.auth.management import create_permissions
+from django.contrib.contenttypes.management import create_contenttypes
+
+post_migrate.disconnect(create_permissions)
+post_migrate.disconnect(create_contenttypes)

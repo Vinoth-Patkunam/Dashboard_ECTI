@@ -1,6 +1,7 @@
-<!-- src/app/pages/dashboard/dashboard.component.html -->
-<div class="card">
-    <h2>Bienvenue sur le Dashboard</h2>
-    <p>Ici tu pourras intégrer tes graphiques et statistiques.</p>
-  </div>
-  
+<div style="display:block;">
+  <canvas baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          chartType="bar">
+  </canvas>
+</div>

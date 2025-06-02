@@ -1,17 +1,13 @@
-class EctiRouter:
-    app_label_to_db = {
-        'ecti':        'default',      # ou 'ecti' selon tes noms
-        'infolocales': 'infolocales',
-        'tablecti':    'tablecti',
-        'tstatic':     'tstatic',
-    }
-
+class ECTIRouter:
     def db_for_read(self, model, **hints):
-        return self.app_label_to_db.get(model._meta.app_label)
+        if getattr(model._meta, "app_label", "") in ("ecti", "infolocales", "tablecti", "tstatic"):
+            return model._meta.app_label  # ecti, infolocales, etc.
+        return "default"
 
-    # on bloque toute écriture
     def db_for_write(self, model, **hints):
-        return None
+        # On ne fait pas d'écriture sur les bases MySQL
+        return "default"
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        return False
+        # Autorise les migrations uniquement sur default (sqlite)
+        return db == "default"

@@ -750,7 +750,7 @@ class Motifrejet(models.Model):
 
 class Notedefrais(models.Model):
 
-    id = models.AutoField(unique=True)
+    id = models.AutoField(primary_key=True)
 
     nummission = models.IntegerField(db_column='NumMission')  # Field name made lowercase.
 
@@ -1057,7 +1057,7 @@ class Suivikmexpert(models.Model):
 
 class TmpLignedefrais(models.Model):
 
-    id = models.AutoField()
+    id = models.AutoField(primary_key=True)
 
     numexp = models.IntegerField(db_column='numExp')  # Field name made lowercase.
 
