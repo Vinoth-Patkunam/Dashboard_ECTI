@@ -1,7 +1,39 @@
-<div style="display:block;">
-  <canvas baseChart
-          [data]="barChartData"
-          [options]="barChartOptions"
-          chartType="bar">
+<!-- src/app/pages/dashboard/dashboard.component.html -->
+
+<h2>Dashboard</h2>
+
+<!-- ─── 1) Compteur du montant total versé ─── -->
+<div class="total-montant">
+  <strong>Montant total versé :</strong>
+  <span class="montant">{{ totalMontant | number:'1.2-2' }} €</span>
+</div>
+
+<!-- ─── 2) Bar chart : nombre de notes par mois ─── -->
+<div class="chart-container" style="margin-top: 2rem;">
+  <canvas
+    baseChart
+    [data]="barChartData"
+    [options]="barChartOptions"
+    chartType="bar">
+  </canvas>
+</div>
+
+<!-- ─── 3) Line chart : montant versé par mois ─── -->
+<div class="chart-container" style="margin-top: 2rem;">
+  <canvas
+    baseChart
+    [data]="amountChartData"
+    [options]="amountChartOptions"
+    chartType="line">
+  </canvas>
+</div>
+
+<!-- ─── 4) Pie chart : répartition des montants par année ─── -->
+<div class="chart-container" style="margin-top: 2rem;">
+  <canvas
+    baseChart
+    [data]="pieChartData"
+    [options]="pieChartOptions"
+    chartType="pie">
   </canvas>
 </div>
