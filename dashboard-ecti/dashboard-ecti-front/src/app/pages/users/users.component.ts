@@ -1,31 +1,54 @@
-// src/app/pages/users/users.component.ts
-import { Component, OnInit }        from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { MatTableModule }            from '@angular/material/table';
-import { MatCardModule }             from '@angular/material/card';
-import { environment } from '../../../environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule }  from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
+interface Adherent {
+  numexp: number;  // Numéro expert
+  nom:    string;  // Nom
+  pays:   string;  // Pays
+  copos:  string;  // Code postal
+  emel:    string | null;   // email
+  telpor:  string | null;   // portable
+}
 
 @Component({
-  standalone: true,
   selector: 'app-users',
+  standalone: true,
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
-  imports: [
-    HttpClientModule,
-    MatTableModule,
-    MatCardModule
-  ]
+  styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];                       // ← PROPRIÉTÉ MANQUANTE
-  displayedColumns = ['id', 'nom'];        // (optionnel, pour MatTable)
+  adherents: Adherent[] = [];
+  filtered:  Adherent[] = [];
+  search:    string    = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.http
-      .get<any[]>(`${environment.apiUrl}/utilisateurs/`)
-      .subscribe(data => (this.users = data));
+      .get<Adherent[]>('/api/tiadhs/?format=json', {
+        headers: { 'Accept': 'application/json' }
+      })
+      .subscribe(
+        data => {
+          this.adherents = data;
+          this.filtered  = [...data];
+        },
+        err => {
+          console.error('Erreur chargement adhérents', err);
+        }
+      );
   }
+
+  onSearch(): void {
+  const lower = this.search.trim().toLowerCase();
+  this.filtered = this.adherents.filter(a => {
+    const haystack = 
+      `${a.nom} ${a.pays} ${a.copos} ${a.emel ?? ''} ${a.telpor ?? ''}`.toLowerCase();
+    return haystack.includes(lower);
+  });
+}
+
 }

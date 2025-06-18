@@ -749,7 +749,8 @@ class TelechargementSerializer(serializers.ModelSerializer):
 class TiAdhSerializer(serializers.ModelSerializer):
     class Meta:
         model = TiAdh
-        fields = '__all__'
+        fields = ['numexp', 'nom', 'pays', 'copos', 'emel', 'telpor']
+
 
 
 class TiAppelprpaSerializer(serializers.ModelSerializer):

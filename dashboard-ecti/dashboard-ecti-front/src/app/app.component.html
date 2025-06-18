@@ -1,13 +1,37 @@
-<mat-sidenav-container>
-  <mat-sidenav mode="side" opened>
-    <app-sidebar></app-sidebar>
-  </mat-sidenav>
+<aside class="sidebar">
+  <!-- entête -->
+  <div class="sidebar-header">
+    <h2 class="logo">ECTI Dashboard</h2>
+  </div>
 
-  <mat-sidenav-content>
-    <app-header></app-header>
+  <!-- navigation principale -->
+  <nav class="sidebar-nav">
+    <ul>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="/accueil">
+          <span class="icon">🏠</span><span class="label">Accueil</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/dashboard">
+          <span class="icon">📈</span><span class="label">Dashboard</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/users">
+          <span class="icon">🔍</span><span class="label">Utilisateurs</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/parametre">
+          <span class="icon">⚙️</span><span class="label">Paramètre</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
-    <main class="main-content">
-      <router-outlet></router-outlet>
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  <!-- pied de page -->
+  <div class="sidebar-footer">
+    <button class="btn-logout">Déconnexion</button>
+  </div>
+</aside>

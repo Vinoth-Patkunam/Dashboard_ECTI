@@ -10,4 +10,3 @@ export class ApiService {
     return this.http.get<T[]>(`/api/${resource}/`);
   }
 }
-

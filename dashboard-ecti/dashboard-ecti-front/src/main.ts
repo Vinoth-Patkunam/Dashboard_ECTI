@@ -1,39 +1,42 @@
 // src/main.ts
-import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { bootstrapApplication }              from '@angular/platform-browser';
-import { provideRouter }                     from '@angular/router';
-import { provideHttpClient, HttpClientModule } from '@angular/common/http';
-
+import { bootstrapApplication } from '@angular/platform-browser';
 import {
-  BaseChartDirective,
-  provideCharts,
-  withDefaultRegisterables
-} from 'ng2-charts';
-import { Chart, registerables } from 'chart.js';
+  provideRouter,
+  withEnabledBlockingInitialNavigation,
+  Routes
+} from '@angular/router';
+import { provideHttpClient }   from '@angular/common/http';
 
-import { AppComponent } from './app/app.component';
-import { routes }       from './app/app.routes';
-import { environment }  from './environments/environment';
+import { AppComponent }        from './app/app.component';
+import { AccueilComponent }    from './app/pages/accueil/accueil.component';
+import { ParametreComponent }  from './app/pages/parametre/parametre.component';
 
-if (environment.production) {
-  enableProdMode();
-}
+const routes: Routes = [
+  { path: 'accueil',   component: AccueilComponent },
 
-// Enregistre les controllers, scales, légendes… de Chart.js
-Chart.register(...registerables);
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import(
+        './app/pages/dashboard/dashboard-list-tables/dashboard-list-tables.component'
+      ).then(m => m.DashboardListTablesComponent)
+  },
+
+  {
+    path: 'utilisateurs',
+    loadComponent: () =>
+      import('./app/pages/users/users.component')
+        .then(m => m.UsersComponent)
+  },
+
+  { path: 'parametre', component: ParametreComponent },
+  { path: '',         redirectTo: 'accueil', pathMatch: 'full' },
+  { path: '**',       redirectTo: 'accueil' }
+];
 
 bootstrapApplication(AppComponent, {
   providers: [
-    // 1) HTTP client
-    importProvidersFrom(HttpClientModule),
-    provideHttpClient(),
-
-    // 2) Routing
-    provideRouter(routes),
-
-    // 3) Chart.js + directive standalone
-    provideCharts(withDefaultRegisterables()),
-    importProvidersFrom(BaseChartDirective)
+    provideRouter(routes, withEnabledBlockingInitialNavigation()),
+    provideHttpClient()
   ]
-})
-.catch(err => console.error(err));
+}).catch(err => console.error(err));

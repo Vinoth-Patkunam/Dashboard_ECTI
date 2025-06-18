@@ -1,17 +1,40 @@
 <!-- src/app/pages/users/users.component.html -->
-<div class="card">
-    <h2>Liste des utilisateurs</h2>
-    <table mat-table [dataSource]="users" class="table-container">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>Id</th>
-        <td mat-cell *matCellDef="let u">{{ u.id }}</td>
-      </ng-container>
-      <ng-container matColumnDef="nom">
-        <th mat-header-cell *matHeaderCellDef>Nom</th>
-        <td mat-cell *matCellDef="let u">{{ u.nom }}</td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="['id','nom']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['id','nom'];"></tr>
-    </table>
-  </div>
-  
+
+<h1>Recherche des adhérents</h1>
+
+<input
+  type="text"
+  [(ngModel)]="search"
+  (ngModelChange)="onSearch()"
+  placeholder="Rechercher…"
+  class="search-input"
+/>
+
+<div class="table-wrapper">
+  <table class="adh-table" *ngIf="filtered.length; else noData">
+    <thead>
+      <tr>
+        <th>Expert (n°)</th>
+        <th>Nom</th>
+        <th>Pays</th>
+        <th>Code postal</th>
+        <th>Email</th>
+        <th>Portable</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let adh of filtered">
+        <td>{{ adh.numexp }}</td>
+        <td>{{ adh.nom    }}</td>
+        <td>{{ adh.pays   }}</td>
+        <td>{{ adh.copos  }}</td>
+        <td>{{ adh.emel   || '—' }}</td>
+        <td>{{ adh.telpor || '—' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noData>
+  <p class="no-data">Aucun adhérent trouvé.</p>
+</ng-template>

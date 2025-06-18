@@ -12,14 +12,17 @@ export interface NoteDeFrais {
   montantpaye: number | null;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class NoteDeFraisService {
-  // Make sure d’appeler bien l’URL avec le slash final
-  private baseUrl = '/api/notedefrais/';
+  private apiUrl = '/api/notedefrais/?format=json';
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<NoteDeFrais[]> {
-    return this.http.get<NoteDeFrais[]>(this.baseUrl);
-  }
+  getAll(): Observable<any[]> {
+  return this.http.get<any[]>(this.apiUrl, {
+    headers: { 'Accept': 'application/json' }
+  });
+}
 }

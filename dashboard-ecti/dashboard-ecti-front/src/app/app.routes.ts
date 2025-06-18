@@ -1,9 +1,23 @@
 // src/app/app.routes.ts
-import { Routes }             from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { NgModule }             from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { DashboardListTablesComponent } from './pages/dashboard/dashboard-list-tables/dashboard-list-tables.component';
+import { AccueilComponent } from './pages/accueil/accueil.component';
+import { UsersComponent }        from './pages/users/users.component';
+import { ParametreComponent } from './pages/parametre/parametre.component';
 
-export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
-  { path: '',          redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: '**',        redirectTo: 'dashboard' }
+
+const routes: Routes = [
+  { path: 'accueil',      component: AccueilComponent },
+  { path: 'dashboard',    component: DashboardListTablesComponent },
+  { path: 'utilisateurs', component: UsersComponent},
+  { path: 'parametre',    component: ParametreComponent },
+  { path: '',             redirectTo: '/accueil', pathMatch: 'full' },
+  { path: '**',           redirectTo: '/accueil' }
 ];
+
+@NgModule({
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
+})
+export class AppRoutingModule { }

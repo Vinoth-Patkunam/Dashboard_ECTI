@@ -1,0 +1,129 @@
+.dashboard-wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #d32f2f;
+  color: white;
+  display: flex;
+  flex-direction: column;
+
+  .sidebar-header {
+    padding: 16px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  .sidebar-nav {
+    flex: 1;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      a {
+        display: block;
+        padding: 12px 16px;
+        color: white;
+        text-decoration: none;
+      }
+      a.active,
+      a:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+    }
+  }
+  .sidebar-footer {
+    padding: 16px;
+    text-align: center;
+    .btn-logout {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    .search-icon {
+      margin-right: 8px;
+    }
+    .input-search {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .btn-filter {
+      margin-left: 8px;
+      padding: 8px 12px;
+    }
+  }
+
+  .tables-title {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .tables-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .table-item {
+      padding: 12px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      &.selected {
+        background-color: #cfcfcf;
+        font-weight: bold;
+      }
+    }
+
+    .no-result {
+      font-style: italic;
+      color: #666;
+    }
+  }
+
+  .chart-options {
+    margin-top: 24px;
+    margin-bottom: 16px;
+
+    label {
+      margin-right: 8px;
+      font-weight: 500;
+    }
+    select {
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  }
+
+  .loading-indicator {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    color: #1976d2;
+  }
+
+  .chart-container {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 16px;
+  }
+}
