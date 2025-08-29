@@ -267,663 +267,542 @@ from .serializers import (
     TypedetauxSerializer,
 )
 
-class AffectationsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Affectations.objects.all()
+from rest_framework import mixins, viewsets
+from .models_tablecti import Affectations
+from .serializers import AffectationsSerializer
+
+class AffectationsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = AffectationsSerializer
+    def get_queryset(self):
+        return Affectations.objects.using('tablecti').all()
+
+    filterset_fields  = ['codeserva','extena','code3a','depar','codpos']
+    ordering_fields   = ['datouvl','datouvaff']
+    search_fields     = ['codeserva','code3a','depar','codpos']
 
 
-class CategorielucrativeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Categorielucrative.objects.all()
+from rest_framework import mixins, viewsets
+from .models_ecti import Categorielucrative
+from .serializers import CategorielucrativeSerializer
+
+class CategorielucrativeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = CategorielucrativeSerializer
 
+    def get_queryset(self):
+        return Categorielucrative.objects.using('ecti').all()
 
-class ConventionfiliereViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Conventionfiliere.objects.all()
+    filterset_fields = ['code']
+    ordering_fields  = ['code', 'libelle']
+    search_fields    = ['code', 'libelle']
+
+
+
+from rest_framework import mixins, viewsets
+
+from .models_ecti import (
+    Conventionfiliere, Conventionfonction, Conventionnature, Conventionsuiviedition,
+    Correspdelegsage, Correspfichier, Devise, Expertmission,
+    FeedbackConsultant, FeedbackFollowup, FeedbackInfo, Conventionstatut
+)
+from .serializers import (
+    ConventionfiliereSerializer, ConventionfonctionSerializer, ConventionnatureSerializer,
+    ConventionsuivieditionSerializer, CorrespdelegsageSerializer, CorrespfichierSerializer,
+    DeviseSerializer, ExpertmissionSerializer, FeedbackConsultantSerializer,
+    FeedbackFollowupSerializer, FeedbackInfoSerializer, ConventionstatutSerializer
+)
+
+class BaseEctiListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('ecti').all()
+
+class ConventionfiliereViewSet(BaseEctiListViewSet):
+    queryset = Conventionfiliere.objects
     serializer_class = ConventionfiliereSerializer
+    filterset_fields = ['id', 'nom']
+    ordering_fields  = ['id', 'nom']
+    search_fields    = ['nom']
 
-
-class ConventionfonctionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Conventionfonction.objects.all()
+class ConventionfonctionViewSet(BaseEctiListViewSet):
+    queryset = Conventionfonction.objects
     serializer_class = ConventionfonctionSerializer
+    filterset_fields = ['id', 'nom']
+    ordering_fields  = ['id', 'nom']
+    search_fields    = ['nom']
 
-
-class ConventionnatureViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Conventionnature.objects.all()
+class ConventionnatureViewSet(BaseEctiListViewSet):
+    queryset = Conventionnature.objects
     serializer_class = ConventionnatureSerializer
+    filterset_fields = ['id', 'nomcategorie', 'nom', 'lucratif']
+    ordering_fields  = ['id', 'nom', 'nomcategorie']
+    search_fields    = ['nom', 'nomcategorie']
 
-
-class ConventionstatutViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Conventionstatut.objects.all()
+class ConventionstatutViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = ConventionstatutSerializer
+    def get_queryset(self):
+        return Conventionstatut.objects.using('ecti').all()
 
+    filterset_fields = ['id', 'nom', 'lucratif']
+    ordering_fields  = ['id', 'nom']
+    search_fields    = ['nom']
 
-class ConventionsuivieditionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Conventionsuiviedition.objects.all()
+class ConventionsuivieditionViewSet(BaseEctiListViewSet):
+    queryset = Conventionsuiviedition.objects
     serializer_class = ConventionsuivieditionSerializer
+    filterset_fields = ['nummission', 'numsuivi', 'numexp']
+    ordering_fields  = ['nummission', 'numsuivi', 'numexp', 'datesuivi']
+    search_fields    = ['nummission']
 
-
-class CorrespdelegsageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Correspdelegsage.objects.all()
+class CorrespdelegsageViewSet(BaseEctiListViewSet):
+    queryset = Correspdelegsage.objects
     serializer_class = CorrespdelegsageSerializer
+    filterset_fields = ['codedeleg', 'codecomptable']
+    ordering_fields  = ['codedeleg']
+    search_fields    = ['codedeleg', 'nom', 'codecomptable']
 
-
-class CorrespfichierViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Correspfichier.objects.all()
+class CorrespfichierViewSet(BaseEctiListViewSet):
+    queryset = Correspfichier.objects
     serializer_class = CorrespfichierSerializer
+    filterset_fields = ['nom', 'type']
+    ordering_fields  = ['nom', 'type']
+    search_fields    = ['nom', 'chemin', 'type']
 
-
-class CvViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Cv.objects.all()
-    serializer_class = CvSerializer
-
-
-class CvnewViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Cvnew.objects.all()
-    serializer_class = CvnewSerializer
-
-
-class DepdelViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Depdel.objects.all()
-    serializer_class = DepdelSerializer
-
-
-class DeviseViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Devise.objects.all()
+class DeviseViewSet(BaseEctiListViewSet):
+    queryset = Devise.objects
     serializer_class = DeviseSerializer
+    filterset_fields = ['codealpha', 'pays', 'nom']
+    ordering_fields  = ['codealpha', 'pays', 'nom']
+    search_fields    = ['codealpha', 'pays', 'nom']
 
-
-class EntgeoViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Entgeo.objects.all()
-    serializer_class = EntgeoSerializer
-
-
-class ExpertmissionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Expertmission.objects.all()
+class ExpertmissionViewSet(BaseEctiListViewSet):
+    queryset = Expertmission.objects
     serializer_class = ExpertmissionSerializer
+    filterset_fields = ['nummission', 'numexpert']
+    ordering_fields  = ['nummission', 'numexpert']
+    search_fields    = ['nummission']
 
-
-class FeedbackConsultantViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = FeedbackConsultant.objects.all()
+class FeedbackConsultantViewSet(BaseEctiListViewSet):
+    queryset = FeedbackConsultant.objects
     serializer_class = FeedbackConsultantSerializer
+    filterset_fields = ['mid', 'consultant_nr']
+    ordering_fields  = ['mid', 'consultant_nr', 'days']
+    search_fields    = ['mid']
 
-
-class FeedbackFollowupViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = FeedbackFollowup.objects.all()
+class FeedbackFollowupViewSet(BaseEctiListViewSet):
+    queryset = FeedbackFollowup.objects
     serializer_class = FeedbackFollowupSerializer
+    filterset_fields = ['mid']
+    ordering_fields  = ['mid']
+    search_fields    = ['mid', 'c_name', 'c_info', 'c_action']
 
-
-class FeedbackInfoViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = FeedbackInfo.objects.all()
+class FeedbackInfoViewSet(BaseEctiListViewSet):
+    queryset = FeedbackInfo.objects
     serializer_class = FeedbackInfoSerializer
+    filterset_fields = ['fb_id', 'mission_id', 'date_from', 'date_to']
+    ordering_fields  = ['fb_id', 'date_from', 'date_to']
+    search_fields    = ['rcp_name', 'location', 'feedback']
 
+from rest_framework import mixins, viewsets
+from .models_ecti import (
+    Historiquesage, Imputationcomptablendf, Imputationcomptablendfi,
+    Lignedefrais, Lignedekm, Log, MissionetatTransition, Missions
+)
+from .serializers import (
+    HistoriquesageSerializer, ImputationcomptablendfSerializer, ImputationcomptablendfiSerializer,
+    LignedefraisSerializer, LignedekmSerializer, LogSerializer, MissionetatTransitionSerializer, MissionsSerializer
+)
 
-class FilieresViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Filieres.objects.all()
-    serializer_class = FilieresSerializer
+class BaseEctiListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('ecti').all()
 
-
-class FonctionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Fonction.objects.all()
-    serializer_class = FonctionSerializer
-
-
-class GroudelViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Groudel.objects.all()
-    serializer_class = GroudelSerializer
-
-
-class HistoriquesageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Historiquesage.objects.all()
+class HistoriquesageViewSet(BaseEctiListViewSet):
+    queryset = Historiquesage.objects
     serializer_class = HistoriquesageSerializer
+    ordering_fields = ['dateenvoi']; search_fields = ['nomfichier']
 
-
-class ImputationcomptablendfViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Imputationcomptablendf.objects.all()
+class ImputationcomptablendfViewSet(BaseEctiListViewSet):
+    queryset = Imputationcomptablendf.objects
     serializer_class = ImputationcomptablendfSerializer
+    filterset_fields = ['codecomptable','typemission','fraiscompris']; search_fields = ['libelle']
 
-
-class ImputationcomptablendfiViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Imputationcomptablendfi.objects.all()
+class ImputationcomptablendfiViewSet(BaseEctiListViewSet):
+    queryset = Imputationcomptablendfi.objects
     serializer_class = ImputationcomptablendfiSerializer
+    filterset_fields = ['codebusiness','codeanalytique','codecomptable']; search_fields = ['libellebusiness']
 
-
-class LanguesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Langues.objects.all()
-    serializer_class = LanguesSerializer
-
-
-class LignedefraisViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Lignedefrais.objects.all()
+class LignedefraisViewSet(BaseEctiListViewSet):
+    queryset = Lignedefrais.objects
     serializer_class = LignedefraisSerializer
+    filterset_fields = ['idnote','typedefrais','devise','date_frais']; ordering_fields = ['date_frais','montant','montanteuro']
 
-
-class LignedekmViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Lignedekm.objects.all()
+class LignedekmViewSet(BaseEctiListViewSet):
+    queryset = Lignedekm.objects
     serializer_class = LignedekmSerializer
+    filterset_fields = ['idnote','typedepense','is2roues']; ordering_fields = ['jour','nbkm']
 
-
-class LogViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Log.objects.all()
+class LogViewSet(BaseEctiListViewSet):
+    queryset = Log.objects
     serializer_class = LogSerializer
+    ordering_fields = ['date']; search_fields = ['log']
 
-
-class MissionetatTransitionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = MissionetatTransition.objects.all()
+class MissionetatTransitionViewSet(BaseEctiListViewSet):
+    queryset = MissionetatTransition.objects
     serializer_class = MissionetatTransitionSerializer
+    filterset_fields = ['etat','etat_possible']
 
-
-class MissionsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Missions.objects.all()
+class MissionsViewSet(BaseEctiListViewSet):
+    queryset = Missions.objects
     serializer_class = MissionsSerializer
+    filterset_fields = ['nummission','delegationid','etat','filiere','fonction','codepays','expertprincipal']
+    ordering_fields = ['nummission','datedemande','datedebut','datefin']
+    search_fields = ['objet','beneficiaire','lieu','persencharge']
 
+from rest_framework import mixins, viewsets
+from .models_ecti import (
+    MissionsV2, Missionsetat, Motifrejet, Notedefrais,
+    Notedefraisjustificatifs, Notedefraisplafond, Notedefraisrejet, Notedefraissage
+)
+from .serializers import (
+    MissionsV2Serializer, MissionsetatSerializer, MotifrejetSerializer, NotedefraisSerializer,
+    NotedefraisjustificatifsSerializer, NotedefraisplafondSerializer,
+    NotedefraisrejetSerializer, NotedefraissageSerializer
+)
 
-class MissionsV2ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = MissionsV2.objects.all()
+class BaseEctiListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('ecti').all()
+
+class MissionsV2ViewSet(BaseEctiListViewSet):
+    queryset = MissionsV2.objects
     serializer_class = MissionsV2Serializer
+    filterset_fields = ['nummission', 'statut', 'nature', 'lucratif', 'facturation']
+    ordering_fields  = ['nummission', 'datecontact', 'montanttotal', 'montanttotalpfg', 'montanttotalfrais']
+    search_fields    = ['tradfiliere','tradfonction','tradstatut','tradnature','pmdemandeur','adresdemandeur','adresville']
 
-
-class MissionsetatViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Missionsetat.objects.all()
+class MissionsetatViewSet(BaseEctiListViewSet):
+    queryset = Missionsetat.objects
     serializer_class = MissionsetatSerializer
+    ordering_fields = ['position']; search_fields = ['nom']
 
-
-class MontantcotisationsanneeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Montantcotisationsannee.objects.all()
-    serializer_class = MontantcotisationsanneeSerializer
-
-
-class MotifrejetViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Motifrejet.objects.all()
+class MotifrejetViewSet(BaseEctiListViewSet):
+    queryset = Motifrejet.objects
     serializer_class = MotifrejetSerializer
+    search_fields = ['nom', 'codeinterne']
 
-
-class Naf24ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Naf24.objects.all()
-    serializer_class = Naf24Serializer
-
-
-class Naf25ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Naf25.objects.all()
-    serializer_class = Naf25Serializer
-
-
-class Naf25ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Naf25.objects.all()
-    serializer_class = Naf25Serializer
-
-
-class NafCode1ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = NafCode1.objects.all()
-    serializer_class = NafCode1Serializer
-
-
-class NafCode2ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = NafCode2.objects.all()
-    serializer_class = NafCode2Serializer
-
-
-class NafRev2ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = NafRev2.objects.all()
-    serializer_class = NafRev2Serializer
-
-
-class NotedefraisViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefrais.objects.all()
+class NotedefraisViewSet(BaseEctiListViewSet):
+    queryset = Notedefrais.objects
     serializer_class = NotedefraisSerializer
+    filterset_fields = ['id','nummission','statut','expert']
+    ordering_fields  = ['datesaisie','datepaiement','montanttotal','montantpaye']
+    search_fields    = ['commentairesirefus']
 
-
-class NotedefraisjustificatifsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefraisjustificatifs.objects.all()
+class NotedefraisjustificatifsViewSet(BaseEctiListViewSet):
+    queryset = Notedefraisjustificatifs.objects
     serializer_class = NotedefraisjustificatifsSerializer
+    filterset_fields = ['idndf','type']; search_fields = ['originalfilename','renamedfilename']
 
-
-class NotedefraisplafondViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefraisplafond.objects.all()
+class NotedefraisplafondViewSet(BaseEctiListViewSet):
+    queryset = Notedefraisplafond.objects
     serializer_class = NotedefraisplafondSerializer
+    filterset_fields = ['typefrais','typedepense']
 
-
-class NotedefraisrejetViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefraisrejet.objects.all()
+class NotedefraisrejetViewSet(BaseEctiListViewSet):
+    queryset = Notedefraisrejet.objects
     serializer_class = NotedefraisrejetSerializer
+    filterset_fields = ['notedefrais','motifrejet']
 
-
-class NotedefraissageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefraissage.objects.all()
+class NotedefraissageViewSet(BaseEctiListViewSet):
+    queryset = Notedefraissage.objects
     serializer_class = NotedefraissageSerializer
+    filterset_fields = ['idndf','codejournal','typepiece','codejournal']
+    search_fields    = ['libecriture','refecriture','comptegeneral','compteaux']
 
+from rest_framework import mixins, viewsets
+from .models_ecti import (
+    Notedefraisstatut, Notedefraistaux, Partenariats, Suivikmexpert,
+    TmpLignedefrais, TmpLignedekm, TmpNotedefraissage,
+    Typedefrais, Typedepense, Typedetaux
+)
+from .serializers import (
+    NotedefraisstatutSerializer, NotedefraistauxSerializer, PartenariatsSerializer, SuivikmexpertSerializer,
+    TmpLignedefraisSerializer, TmpLignedekmSerializer, TmpNotedefraissageSerializer,
+    TypedefraisSerializer, TypedepenseSerializer, TypedetauxSerializer
+)
 
-class NotedefraisstatutViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefraisstatut.objects.all()
+class BaseEctiListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('ecti').all()
+
+class NotedefraisstatutViewSet(BaseEctiListViewSet):
+    queryset = Notedefraisstatut.objects
     serializer_class = NotedefraisstatutSerializer
+    filterset_fields = ['id','ordre','codeinterne']; search_fields = ['nom']; ordering_fields = ['ordre','id']
 
-
-class NotedefraistauxViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Notedefraistaux.objects.all()
+class NotedefraistauxViewSet(BaseEctiListViewSet):
+    queryset = Notedefraistaux.objects
     serializer_class = NotedefraistauxSerializer
+    filterset_fields = ['idtypetaux','datedebut','taux']; ordering_fields = ['datedebut','taux']
 
-
-class ParametresViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Parametres.objects.all()
-    serializer_class = ParametresSerializer
-
-
-class PartenariatsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Partenariats.objects.all()
+class PartenariatsViewSet(BaseEctiListViewSet):
+    queryset = Partenariats.objects
     serializer_class = PartenariatsSerializer
+    ordering_fields = ['ordre']; search_fields = ['nom']
 
-
-class ServicesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Services.objects.all()
-    serializer_class = ServicesSerializer
-
-
-class StatmisViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Statmis.objects.all()
-    serializer_class = StatmisSerializer
-
-
-class StatuttiersViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Statuttiers.objects.all()
-    serializer_class = StatuttiersSerializer
-
-
-class SuivikmexpertViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Suivikmexpert.objects.all()
+class SuivikmexpertViewSet(BaseEctiListViewSet):
+    queryset = Suivikmexpert.objects
     serializer_class = SuivikmexpertSerializer
+    filterset_fields = ['expert','annee']; ordering_fields = ['annee','nbkm']
 
-
-class TAdressViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TAdress.objects.all()
-    serializer_class = TAdressSerializer
-
-
-class TAffversViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TAffvers.objects.all()
-    serializer_class = TAffversSerializer
-
-
-class TContactViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TContact.objects.all()
-    serializer_class = TContactSerializer
-
-
-class TCorrespViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TCorresp.objects.all()
-    serializer_class = TCorrespSerializer
-
-
-class TCotiViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TCoti.objects.all()
-    serializer_class = TCotiSerializer
-
-
-class TErreurmailViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TErreurmail.objects.all()
-    serializer_class = TErreurmailSerializer
-
-
-class TEtacivilViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TEtacivil.objects.all()
-    serializer_class = TEtacivilSerializer
-
-
-class TExpertViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TExpert.objects.all()
-    serializer_class = TExpertSerializer
-
-
-class TExprintViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TExprint.objects.all()
-    serializer_class = TExprintSerializer
-
-
-class TFormViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TForm.objects.all()
-    serializer_class = TFormSerializer
-
-
-class TLangViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TLang.objects.all()
-    serializer_class = TLangSerializer
-
-
-class TLienpersoViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TLienperso.objects.all()
-    serializer_class = TLienpersoSerializer
-
-
-class TLienservViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TLienserv.objects.all()
-    serializer_class = TLienservSerializer
-
-
-class TServicescourrielsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TServicescourriels.objects.all()
-    serializer_class = TServicescourrielsSerializer
-
-
-class TSituViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TSitu.objects.all()
-    serializer_class = TSituSerializer
-
-
-class TTvaViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TTva.objects.all()
-    serializer_class = TTvaSerializer
-
-
-class TValidationexpViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TValidationexp.objects.all()
-    serializer_class = TValidationexpSerializer
-
-
-class TVersprvViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TVersprv.objects.all()
-    serializer_class = TVersprvSerializer
-
-
-class TVersrelViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TVersrel.objects.all()
-    serializer_class = TVersrelSerializer
-
-
-class TauxtvasituViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Tauxtvasitu.objects.all()
-    serializer_class = TauxtvasituSerializer
-
-
-class TcAdressViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcAdress.objects.all()
-    serializer_class = TcAdressSerializer
-
-
-class TcBankViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcBank.objects.all()
-    serializer_class = TcBankSerializer
-
-
-class TcCatgorieViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcCatgorie.objects.all()
-    serializer_class = TcCatgorieSerializer
-
-
-class TcCatgorieViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcCatgorie.objects.all()
-    serializer_class = TcCatgorieSerializer
-
-
-class TcCodpostalViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcCodpostal.objects.all()
-    serializer_class = TcCodpostalSerializer
-
-
-class TcConnuViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcConnu.objects.all()
-    serializer_class = TcConnuSerializer
-
-
-class TcCotisViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcCotis.objects.all()
-    serializer_class = TcCotisSerializer
-
-
-class TcDepViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcDep.objects.all()
-    serializer_class = TcDepSerializer
-
-
-class TcDureViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcDure.objects.all()
-    serializer_class = TcDureSerializer
-
-
-class TcEffectifViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcEffectif.objects.all()
-    serializer_class = TcEffectifSerializer
-
-
-class TcFonctionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcFonction.objects.all()
-    serializer_class = TcFonctionSerializer
-
-
-class TcFormViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcForm.objects.all()
-    serializer_class = TcFormSerializer
-
-
-class TcInforViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcInfor.objects.all()
-    serializer_class = TcInforSerializer
-
-
-class TcLangViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcLang.objects.all()
-    serializer_class = TcLangSerializer
-
-
-class TcNatversViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcNatvers.objects.all()
-    serializer_class = TcNatversSerializer
-
-
-class TcPayeurViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcPayeur.objects.all()
-    serializer_class = TcPayeurSerializer
-
-
-class TcPaysViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcPays.objects.all()
-    serializer_class = TcPaysSerializer
-
-
-class TcPosViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcPos.objects.all()
-    serializer_class = TcPosSerializer
-
-
-class TcPosViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcPos.objects.all()
-    serializer_class = TcPosSerializer
-
-
-class TcSituViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcSitu.objects.all()
-    serializer_class = TcSituSerializer
-
-
-class TcSpeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcSpe.objects.all()
-    serializer_class = TcSpeSerializer
-
-
-class TcSuiviViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcSuivi.objects.all()
-    serializer_class = TcSuiviSerializer
-
-
-class TcTitreViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcTitre.objects.all()
-    serializer_class = TcTitreSerializer
-
-
-class TcTrancaViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcTranca.objects.all()
-    serializer_class = TcTrancaSerializer
-
-
-class TcTrancaViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcTranca.objects.all()
-    serializer_class = TcTrancaSerializer
-
-
-class TcTypservViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcTypserv.objects.all()
-    serializer_class = TcTypservSerializer
-
-
-class TcTypservViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TcTypserv.objects.all()
-    serializer_class = TcTypservSerializer
-
-
-class TciChampsrViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TciChampsr.objects.all()
-    serializer_class = TciChampsrSerializer
-
-
-class TelechargementViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Telechargement.objects.all()
-    serializer_class = TelechargementSerializer
-
-
-class TiAdhViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiAdh.objects.all()
-    serializer_class = TiAdhSerializer
-
-
-class TiAppelprpaViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiAppelprpa.objects.all()
-    serializer_class = TiAppelprpaSerializer
-
-
-class TiAppelquestViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiAppelquest.objects.all()
-    serializer_class = TiAppelquestSerializer
-
-
-class TiCommetiersViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiCommetiers.objects.all()
-    serializer_class = TiCommetiersSerializer
-
-
-class TiComspeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiComspe.objects.all()
-    serializer_class = TiComspeSerializer
-
-
-class TiCoti1ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiCoti1.objects.all()
-    serializer_class = TiCoti1Serializer
-
-
-class TiCoti2ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiCoti2.objects.all()
-    serializer_class = TiCoti2Serializer
-
-
-class TiCoti3ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiCoti3.objects.all()
-    serializer_class = TiCoti3Serializer
-
-
-class TiCourrielversdlgViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiCourrielversdlg.objects.all()
-    serializer_class = TiCourrielversdlgSerializer
-
-
-class TiDeptViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiDept.objects.all()
-    serializer_class = TiDeptSerializer
-
-
-class TiDpassvalidViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiDpassvalid.objects.all()
-    serializer_class = TiDpassvalidSerializer
-
-
-class TiInterViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiInter.objects.all()
-    serializer_class = TiInterSerializer
-
-
-class TiLangViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiLang.objects.all()
-    serializer_class = TiLangSerializer
-
-
-class TiLang1ViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiLang1.objects.all()
-    serializer_class = TiLang1Serializer
-
-
-class TiLexpViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiLexp.objects.all()
-    serializer_class = TiLexpSerializer
-
-
-class TiListpmViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiListpm.objects.all()
-    serializer_class = TiListpmSerializer
-
-
-class TiMailViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiMail.objects.all()
-    serializer_class = TiMailSerializer
-
-
-class TiMissiondpassvalidViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiMissiondpassvalid.objects.all()
-    serializer_class = TiMissiondpassvalidSerializer
-
-
-class TiParamViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiParam.objects.all()
-    serializer_class = TiParamSerializer
-
-
-class TiPmnonenrgleViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiPmnonenrgle.objects.all()
-    serializer_class = TiPmnonenrgleSerializer
-
-
-class TiRenouvellementCotiViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiRenouvellementCoti.objects.all()
-    serializer_class = TiRenouvellementCotiSerializer
-
-
-class TiStatutexperttoupdtViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiStatutexperttoupdt.objects.all()
-    serializer_class = TiStatutexperttoupdtSerializer
-
-
-class TiTabexpViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiTabexp.objects.all()
-    serializer_class = TiTabexpSerializer
-
-
-class TiVisexpViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TiVisexp.objects.all()
-    serializer_class = TiVisexpSerializer
-
-
-class TmpLignedefraisViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TmpLignedefrais.objects.all()
+class TmpLignedefraisViewSet(BaseEctiListViewSet):
+    queryset = TmpLignedefrais.objects
     serializer_class = TmpLignedefraisSerializer
+    filterset_fields = ['numexp','nummission','typedefrais','typedepense','devise','date_frais']
+    ordering_fields = ['dateinsert','date_frais','montant','montanteuro']
 
-
-class TmpLignedekmViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TmpLignedekm.objects.all()
+class TmpLignedekmViewSet(BaseEctiListViewSet):
+    queryset = TmpLignedekm.objects
     serializer_class = TmpLignedekmSerializer
+    filterset_fields = ['numexp','nummission','typedepense','is2roues']
+    ordering_fields = ['jour','nbkm']
 
-
-class TmpNotedefraissageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TmpNotedefraissage.objects.all()
+class TmpNotedefraissageViewSet(BaseEctiListViewSet):
+    queryset = TmpNotedefraissage.objects
     serializer_class = TmpNotedefraissageSerializer
+    filterset_fields = ['idndf','codejournal','typepiece','numexp']
+    search_fields = ['libecriture','refecriture','comptegeneral','compteaux']
 
-
-class TypedefraisViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Typedefrais.objects.all()
+class TypedefraisViewSet(BaseEctiListViewSet):
+    queryset = Typedefrais.objects
     serializer_class = TypedefraisSerializer
+    filterset_fields = ['tva','parent']; search_fields = ['label']; ordering_fields = ['ordre']
 
-
-class TypedepenseViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Typedepense.objects.all()
+class TypedepenseViewSet(BaseEctiListViewSet):
+    queryset = Typedepense.objects
     serializer_class = TypedepenseSerializer
+    search_fields = ['nom','codeinterne']
 
-
-class TypedetauxViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Typedetaux.objects.all()
+class TypedetauxViewSet(BaseEctiListViewSet):
+    queryset = Typedetaux.objects
     serializer_class = TypedetauxSerializer
+    search_fields = ['nom','codeinterne']
 
+from rest_framework import mixins, viewsets
+from .models_infolocales import Cv, Cvnew, Langues, Parametres, Telechargement
+from .serializers import (
+    CvSerializer, CvnewSerializer, LanguesSerializer, ParametresSerializer, TelechargementSerializer
+)
 
+class BaseInfolocalesListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('infolocales').all()
+
+class CvViewSet(BaseInfolocalesListViewSet):
+    queryset = Cv.objects
+    serializer_class = CvSerializer
+    filterset_fields = ['numexp','langue','typedoc']
+    ordering_fields  = ['dateinser','datemodif','nbtelecharge']
+    search_fields    = ['nomfichier']
+
+class CvnewViewSet(BaseInfolocalesListViewSet):
+    queryset = Cvnew.objects
+    serializer_class = CvnewSerializer
+    filterset_fields = ['numexp','langue','validation','nouvelleadhesion','typedoc']
+    ordering_fields  = ['dateinser']
+    search_fields    = ['nomfichier','commentairerefus']
+
+class LanguesViewSet(BaseInfolocalesListViewSet):
+    queryset = Langues.objects
+    serializer_class = LanguesSerializer
+    search_fields    = ['nom','suffixe','repertoire']
+
+class ParametresViewSet(BaseInfolocalesListViewSet):
+    queryset = Parametres.objects
+    serializer_class = ParametresSerializer
+    search_fields    = ['nom','valeur']
+
+class TelechargementViewSet(BaseInfolocalesListViewSet):
+    queryset = Telechargement.objects
+    serializer_class = TelechargementSerializer
+    filterset_fields = ['numexp']
+    ordering_fields  = ['lastdate','nbcvjour','nbcvtotal']
+
+from rest_framework import mixins, viewsets
+from .models_infolocales import Cv, Cvnew, Langues, Parametres, Telechargement
+from .serializers import (
+    CvSerializer, CvnewSerializer, LanguesSerializer,
+    ParametresSerializer, TelechargementSerializer
+)
+
+# lit sur la base 'infolocales'
+class BaseInfolocalesListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('infolocales').all()
+
+class CvViewSet(BaseInfolocalesListViewSet):
+    queryset = Cv.objects
+    serializer_class = CvSerializer
+    filterset_fields = ['numexp', 'langue', 'typedoc']
+    ordering_fields  = ['dateinser', 'datemodif', 'nbtelecharge']
+    search_fields    = ['nomfichier']
+
+class CvnewViewSet(BaseInfolocalesListViewSet):
+    queryset = Cvnew.objects
+    serializer_class = CvnewSerializer
+    filterset_fields = ['numexp', 'langue', 'validation', 'nouvelleadhesion', 'typedoc']
+    ordering_fields  = ['dateinser']
+    search_fields    = ['nomfichier', 'commentairerefus']
+
+class LanguesViewSet(BaseInfolocalesListViewSet):
+    queryset = Langues.objects
+    serializer_class = LanguesSerializer
+    search_fields    = ['nom', 'suffixe', 'repertoire']
+
+class ParametresViewSet(BaseInfolocalesListViewSet):
+    queryset = Parametres.objects
+    serializer_class = ParametresSerializer
+    search_fields    = ['nom', 'valeur']
+
+class TelechargementViewSet(BaseInfolocalesListViewSet):
+    queryset = Telechargement.objects
+    serializer_class = TelechargementSerializer
+    filterset_fields = ['numexp']
+    ordering_fields  = ['lastdate', 'nbcvjour', 'nbcvtotal']
+
+from rest_framework import mixins, viewsets
+from .models_tstatic import (
+    Filieres, Fonction, Naf24, Naf25, NafCode1, NafCode2, NafRev2,
+    TContact, TServicescourriels, TcAdress, TcBank, TcCatgorie, TcCodpostal,
+    TcConnu, TcCotis, TcDep, TcDure, TcInfor, TcNatvers, TcPayeur,
+    TcPos, TcSuivi, TcTranca, TcTypserv
+)
+from .serializers import (
+    FilieresSerializer, FonctionSerializer, Naf24Serializer, Naf25Serializer,
+    NafCode1Serializer, NafCode2Serializer, NafRev2Serializer,
+    TContactSerializer, TServicescourrielsSerializer, TcAdressSerializer, TcBankSerializer,
+    TcCatgorieSerializer, TcCodpostalSerializer, TcConnuSerializer, TcCotisSerializer,
+    TcDepSerializer, TcDureSerializer, TcInforSerializer, TcNatversSerializer, TcPayeurSerializer,
+    TcPosSerializer, TcSuiviSerializer, TcTrancaSerializer, TcTypservSerializer
+)
+
+# Base: lit sur la DB 'tstatic'
+class BaseTstaticListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('tstatic').all()
+
+class FilieresViewSet(BaseTstaticListViewSet):           queryset=Filieres.objects;           serializer_class=FilieresSerializer
+class FonctionViewSet(BaseTstaticListViewSet):           queryset=Fonction.objects;           serializer_class=FonctionSerializer
+class Naf24ViewSet(BaseTstaticListViewSet):              queryset=Naf24.objects;              serializer_class=Naf24Serializer
+class Naf25ViewSet(BaseTstaticListViewSet):              queryset=Naf25.objects;              serializer_class=Naf25Serializer
+class NafCode1ViewSet(BaseTstaticListViewSet):           queryset=NafCode1.objects;           serializer_class=NafCode1Serializer
+class NafCode2ViewSet(BaseTstaticListViewSet):           queryset=NafCode2.objects;           serializer_class=NafCode2Serializer
+class NafRev2ViewSet(BaseTstaticListViewSet):            queryset=NafRev2.objects;            serializer_class=NafRev2Serializer
+class TContactViewSet(BaseTstaticListViewSet):           queryset=TContact.objects;           serializer_class=TContactSerializer
+class TServicescourrielsViewSet(BaseTstaticListViewSet): queryset=TServicescourriels.objects; serializer_class=TServicescourrielsSerializer
+class TcAdressViewSet(BaseTstaticListViewSet):           queryset=TcAdress.objects;           serializer_class=TcAdressSerializer
+class TcBankViewSet(BaseTstaticListViewSet):             queryset=TcBank.objects;             serializer_class=TcBankSerializer
+class TcCatgorieViewSet(BaseTstaticListViewSet):         queryset=TcCatgorie.objects;         serializer_class=TcCatgorieSerializer
+class TcCodpostalViewSet(BaseTstaticListViewSet):        queryset=TcCodpostal.objects;        serializer_class=TcCodpostalSerializer
+class TcConnuViewSet(BaseTstaticListViewSet):            queryset=TcConnu.objects;            serializer_class=TcConnuSerializer
+class TcCotisViewSet(BaseTstaticListViewSet):            queryset=TcCotis.objects;            serializer_class=TcCotisSerializer
+class TcDepViewSet(BaseTstaticListViewSet):              queryset=TcDep.objects;              serializer_class=TcDepSerializer
+class TcDureViewSet(BaseTstaticListViewSet):             queryset=TcDure.objects;             serializer_class=TcDureSerializer
+class TcInforViewSet(BaseTstaticListViewSet):            queryset=TcInfor.objects;            serializer_class=TcInforSerializer
+class TcNatversViewSet(BaseTstaticListViewSet):          queryset=TcNatvers.objects;          serializer_class=TcNatversSerializer
+class TcPayeurViewSet(BaseTstaticListViewSet):           queryset=TcPayeur.objects;           serializer_class=TcPayeurSerializer
+class TcPosViewSet(BaseTstaticListViewSet):              queryset=TcPos.objects;              serializer_class=TcPosSerializer
+class TcSuiviViewSet(BaseTstaticListViewSet):            queryset=TcSuivi.objects;            serializer_class=TcSuiviSerializer
+class TcTrancaViewSet(BaseTstaticListViewSet):           queryset=TcTranca.objects;           serializer_class=TcTrancaSerializer
+class TcTypservViewSet(BaseTstaticListViewSet):          queryset=TcTypserv.objects;          serializer_class=TcTypservSerializer
+
+from rest_framework import mixins, viewsets
+from .models_tablecti import (
+    Affectations, Depdel, Entgeo, Groudel, Montantcotisationsannee, Naf25, Services, Statmis, Statuttiers,
+    TAdress, TAffvers, TCorresp, TCoti, TErreurmail, TEtacivil, TExpert, TExprint, TForm, TLang, TLienperso,
+    TLienserv, TSitu, TTva, TValidationexp, TVersprv, TVersrel, Tauxtvasitu,
+    TcCatgorie, TcEffectif, TcFonction, TcForm, TcLang, TcPays, TcPos, TcSitu, TcSpe, TcTitre, TcTranca, TcTypserv,
+    TciChampsr, TiAdh, TiAppelprpa, TiAppelquest, TiCommetiers, TiComspe,
+    TiCoti1, TiCoti2, TiCoti3, TiCourrielversdlg, TiDept, TiDpassvalid, TiInter,
+    TiLang, TiLang1, TiLexp, TiListpm, TiMail, TiMissiondpassvalid, TiParam, TiPmnonenrgle,
+    TiRenouvellementCoti, TiStatutexperttoupdt, TiTabexp, TiVisexp
+)
+from .serializers import *
+from .models_tablecti import TiLang
+from .serializers import TiLangSerializer
+
+# base : lecture sur l'alias 'tablecti'
+class BaseTableCtiListVS(mixins.ListModelMixin, viewsets.GenericViewSet):
+    def get_queryset(self):
+        return self.queryset.using('tablecti').all()
+
+# une petite fabrique pour limiter le copier/coller
+def make_vs(model, serializer):
+    class _VS(BaseTableCtiListVS):
+        queryset = model.objects
+        serializer_class = serializer
+    _VS.__name__ = f"{model.__name__}ViewSet"
+    return _VS
+
+AffectationsViewSet         = make_vs(Affectations, AffectationsSerializer)
+DepdelViewSet               = make_vs(Depdel, DepdelSerializer)
+EntgeoViewSet               = make_vs(Entgeo, EntgeoSerializer)
+GroudelViewSet              = make_vs(Groudel, GroudelSerializer)
+MontantcotisationsanneeViewSet = make_vs(Montantcotisationsannee, MontantcotisationsanneeSerializer)
+Naf25ViewSet                = make_vs(Naf25, Naf25Serializer)
+ServicesViewSet             = make_vs(Services, ServicesSerializer)
+StatmisViewSet              = make_vs(Statmis, StatmisSerializer)
+StatuttiersViewSet          = make_vs(Statuttiers, StatuttiersSerializer)
+TAdressViewSet              = make_vs(TAdress, TAdressSerializer)
+TAffversViewSet             = make_vs(TAffvers, TAffversSerializer)
+TCorrespViewSet             = make_vs(TCorresp, TCorrespSerializer)
+TCotiViewSet                = make_vs(TCoti, TCotiSerializer)
+TErreurmailViewSet          = make_vs(TErreurmail, TErreurmailSerializer)
+TEtacivilViewSet            = make_vs(TEtacivil, TEtacivilSerializer)
+TExpertViewSet              = make_vs(TExpert, TExpertSerializer)
+TExprintViewSet             = make_vs(TExprint, TExprintSerializer)
+TFormViewSet                = make_vs(TForm, TFormSerializer)
+TLangViewSet                = make_vs(TLang, TLangSerializer)
+TLienpersoViewSet           = make_vs(TLienperso, TLienpersoSerializer)
+TLienservViewSet            = make_vs(TLienserv, TLienservSerializer)
+TSituViewSet                = make_vs(TSitu, TSituSerializer)
+TTvaViewSet                 = make_vs(TTva, TTvaSerializer)
+TValidationexpViewSet       = make_vs(TValidationexp, TValidationexpSerializer)
+TVersprvViewSet             = make_vs(TVersprv, TVersprvSerializer)
+TVersrelViewSet             = make_vs(TVersrel, TVersrelSerializer)
+TauxtvasituViewSet          = make_vs(Tauxtvasitu, TauxtvasituSerializer)
+TcCatgorieViewSet           = make_vs(TcCatgorie, TcCatgorieSerializer)
+TcEffectifViewSet           = make_vs(TcEffectif, TcEffectifSerializer)
+TcFonctionViewSet           = make_vs(TcFonction, TcFonctionSerializer)
+TcFormViewSet               = make_vs(TcForm, TcFormSerializer)
+TcLangViewSet               = make_vs(TcLang, TcLangSerializer)
+TcPaysViewSet               = make_vs(TcPays, TcPaysSerializer)
+TcPosViewSet                = make_vs(TcPos, TcPosSerializer)
+TcSituViewSet               = make_vs(TcSitu, TcSituSerializer)
+TcSpeViewSet                = make_vs(TcSpe, TcSpeSerializer)
+TcTitreViewSet              = make_vs(TcTitre, TcTitreSerializer)
+TcTrancaViewSet             = make_vs(TcTranca, TcTrancaSerializer)
+TcTypservViewSet            = make_vs(TcTypserv, TcTypservSerializer)
+TciChampsrViewSet           = make_vs(TciChampsr, TciChampsrSerializer)
+TiAdhViewSet                = make_vs(TiAdh, TiAdhSerializer)
+TiAppelprpaViewSet          = make_vs(TiAppelprpa, TiAppelprpaSerializer)
+TiAppelquestViewSet         = make_vs(TiAppelquest, TiAppelquestSerializer)
+TiCommetiersViewSet         = make_vs(TiCommetiers, TiCommetiersSerializer)
+TiComspeViewSet             = make_vs(TiComspe, TiComspeSerializer)
+TiCoti1ViewSet              = make_vs(TiCoti1, TiCoti1Serializer)
+TiCoti2ViewSet              = make_vs(TiCoti2, TiCoti2Serializer)
+TiCoti3ViewSet              = make_vs(TiCoti3, TiCoti3Serializer)
+TiCourrielversdlgViewSet    = make_vs(TiCourrielversdlg, TiCourrielversdlgSerializer)
+TiDeptViewSet               = make_vs(TiDept, TiDeptSerializer)
+TiDpassvalidViewSet         = make_vs(TiDpassvalid, TiDpassvalidSerializer)
+TiInterViewSet              = make_vs(TiInter, TiInterSerializer)
+TiLangViewSet = make_vs(TiLang, TiLangSerializer)
+TiLang1ViewSet              = make_vs(TiLang1, TiLang1Serializer)
+TiLexpViewSet               = make_vs(TiLexp, TiLexpSerializer)
+TiListpmViewSet             = make_vs(TiListpm, TiListpmSerializer)
+TiMailViewSet               = make_vs(TiMail, TiMailSerializer)
+TiMissiondpassvalidViewSet  = make_vs(TiMissiondpassvalid, TiMissiondpassvalidSerializer)
+TiParamViewSet              = make_vs(TiParam, TiParamSerializer)
+TiPmnonenrgleViewSet        = make_vs(TiPmnonenrgle, TiPmnonenrgleSerializer)
+TiRenouvellementCotiViewSet = make_vs(TiRenouvellementCoti, TiRenouvellementCotiSerializer)
+TiStatutexperttoupdtViewSet = make_vs(TiStatutexperttoupdt, TiStatutexperttoupdtSerializer)
+TiTabexpViewSet             = make_vs(TiTabexp, TiTabexpSerializer)
+TiVisexpViewSet             = make_vs(TiVisexp, TiVisexpSerializer)

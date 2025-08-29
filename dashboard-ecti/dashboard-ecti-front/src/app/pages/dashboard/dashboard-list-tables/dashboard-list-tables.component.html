@@ -1,60 +1,55 @@
 <div class="dashboard-wrapper">
-
-  <!-- ── Contenu principal ── -->
   <main class="main-content">
 
-    <!-- Barre de recherche -->
+    <!-- Recherche -->
     <div class="search-bar">
-      <span class="search-icon">🔍</span>
-      <input
-        type="text"
-        class="input-search"
-        placeholder="Rechercher une table..."
+      🔍<input
+        placeholder="Rechercher une table…"
         [(ngModel)]="searchText"
         (ngModelChange)="onSearchTextChange()"
       />
     </div>
 
     <!-- Liste des tables -->
-    <h3 class="tables-title">Sélectionnez une table pour afficher un graphique :</h3>
-    <div class="tables-list">
-      <div
-        class="table-item"
+    <ul class="tables-list">
+      <li
         *ngFor="let tbl of filteredTables"
         (click)="onTableClick(tbl)"
-        [class.selected]="tbl === currentTable">
-        {{ tbl }}
+        [class.selected]="tbl===currentTable"
+      >{{ tbl }}</li>
+    </ul>
+
+    <!-- Données brutes -->
+    <section *ngIf="currentTable">
+      <h2>Données brutes : {{ currentTable }}</h2>
+      <table class="raw-table" *ngIf="rawData.length">
+        <thead>
+          <tr><th *ngFor="let c of columns">{{ c }}</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rawData">
+            <td *ngFor="let c of columns">{{ row[c] }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Contrôles chart -->
+      <div class="chart-controls">
+        <button (click)="onShowChart()">Afficher le graphique</button>
+        <label *ngIf="showChart">
+          Type :
+          <select [(ngModel)]="selectedChartType"
+                  (change)="onChartTypeChange(selectedChartType)">
+            <option *ngFor="let t of chartTypes" [value]="t">{{ t }}</option>
+          </select>
+        </label>
       </div>
-      <div class="no-result" *ngIf="filteredTables.length === 0">
-        Aucun résultat pour « {{ searchText }} »
+
+      <!-- Chart.js -->
+      <div class="chart-container" *ngIf="showChart">
+        <canvas #canvasRef></canvas>
       </div>
-    </div>
-
-    <!-- Invite si aucune table sélectionnée -->
-    <div *ngIf="!currentTable && !loading" class="chart-placeholder">
-      Veuillez sélectionner une table pour générer un graphique.
-    </div>
-
-    <!-- Si une table est sélectionnée, afficher d’abord le sélecteur de type -->
-    <div *ngIf="currentTable" class="chart-options">
-      <label for="typeSelect">Type de graphique :</label>
-      <select
-        id="typeSelect"
-        [(ngModel)]="selectedChartType"
-        (change)="onChartTypeChange(selectedChartType)">
-        <option *ngFor="let t of chartTypes" [ngValue]="t">{{ t }}</option>
-      </select>
-    </div>
-
-    <!-- Spinner de chargement -->
-    <div *ngIf="loading" class="loading-indicator">
-      Chargement…
-    </div>
-
-    <!-- Canvas Chart.js (affiché seulement si la table est sélectionnée) -->
-    <div *ngIf="currentTable && !loading" class="chart-container">
-      <canvas #canvasRef></canvas>
-    </div>
+    </section>
 
   </main>
 </div>

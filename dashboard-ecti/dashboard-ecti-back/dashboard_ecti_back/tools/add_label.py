@@ -11,7 +11,7 @@ def patch_file(path: Path, label: str):
 
     lines = raw.splitlines()
     out = []
-
+# je ne peux
     for line in lines:
         # 1) Supprimer toute app_label existante
         if re.match(r"^\s*app_label\s*=" , line):

@@ -8,9 +8,8 @@ from django.db import models
 
 class Affectations(models.Model):
 
-    pk = models.CompositePrimaryKey('CodeServA', 'ExtenA', 'Code3A', 'Depar', 'CodPos', 'DatOuvL')
 
-    codeserva = models.CharField(db_column='CodeServA', max_length=4)  # Field name made lowercase.
+    codeserva = models.CharField(db_column='CodeServA', max_length=4, primary_key=True) # Field name made lowercase.
 
     extena = models.CharField(db_column='ExtenA', max_length=2)  # Field name made lowercase.
 
@@ -45,7 +44,7 @@ class Affectations(models.Model):
 
 class Depdel(models.Model):
 
-    dep = models.CharField(db_column='Dep', max_length=2, blank=True, null=True)  # Field name made lowercase.
+    dep = models.CharField(db_column='Dep', max_length=2, blank=True, null=True, primary_key=True)
 
     com = models.CharField(db_column='Com', max_length=3, blank=True, null=True)  # Field name made lowercase.
 
@@ -80,9 +79,8 @@ class Depdel(models.Model):
 
 class Entgeo(models.Model):
 
-    pk = models.CompositePrimaryKey('Code3A', 'Depart', 'CodPos', 'DatOuvL')
 
-    code3a = models.CharField(db_column='Code3A', max_length=3)  # Field name made lowercase.
+    code3a = models.CharField(db_column='Code3A', max_length=3, primary_key=True)
 
     depart = models.CharField(db_column='Depart', max_length=2)  # Field name made lowercase.
 
@@ -138,7 +136,7 @@ class Groudel(models.Model):
 
 class Montantcotisationsannee(models.Model):
 
-    annee = models.IntegerField(unique=True)
+    annee = models.IntegerField(primary_key=True)
 
     montant = models.FloatField()
 
@@ -157,9 +155,7 @@ class Montantcotisationsannee(models.Model):
 
 class Naf25(models.Model):
 
-    pk = models.CompositePrimaryKey('Cod_div', 'NAF_Group', 'NAF_NAF')
-
-    cod_div = models.CharField(db_column='Cod_div', max_length=2)  # Field name made lowercase.
+    cod_div = models.CharField(db_column='Cod_div', max_length=2,primary_key=True)
 
     naf_group = models.CharField(db_column='NAF_Group', max_length=2)  # Field name made lowercase.
 
@@ -186,9 +182,7 @@ class Naf25(models.Model):
 
 class Services(models.Model):
 
-    pk = models.CompositePrimaryKey('CodeServ', 'Exten')
-
-    codeserv = models.CharField(db_column='CodeServ', max_length=4)  # Field name made lowercase.
+    codeserv = models.CharField(db_column='CodeServ', max_length=4,primary_key=True)
 
     exten = models.CharField(db_column='Exten', max_length=2)  # Field name made lowercase.
 
@@ -253,7 +247,7 @@ class Services(models.Model):
 
 class Statmis(models.Model):
 
-    code_pays = models.CharField(db_column='Code_Pays', max_length=5, blank=True, null=True)  # Field name made lowercase.
+    code_pays = models.CharField(db_column='Code_Pays', max_length=5, blank=True, null=True,primary_key=True)
 
     nmission = models.FloatField(db_column='NMission', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
 
@@ -338,7 +332,7 @@ class Statmis(models.Model):
 
 class Statuttiers(models.Model):
 
-    id = models.IntegerField(blank=True, null=True)
+    id = models.IntegerField(blank=True, null=True,primary_key=True)
 
     nom = models.CharField(max_length=100, db_collation='utf8_general_ci', blank=True, null=True)
 
@@ -359,9 +353,7 @@ class Statuttiers(models.Model):
 
 class TAdress(models.Model):
 
-    pk = models.CompositePrimaryKey('Necti', 'Nadres')
-
-    necti = models.IntegerField(db_column='Necti')  # Field name made lowercase.
+    necti = models.IntegerField(db_column='Necti',primary_key=True)
 
     nadres = models.SmallIntegerField(db_column='Nadres')  # Field name made lowercase.
 
@@ -433,9 +425,7 @@ class TAffvers(models.Model):
 
 class TCorresp(models.Model):
 
-    pk = models.CompositePrimaryKey('NumPM', 'NumCor')
-
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
     numcor = models.IntegerField(db_column='NumCor')  # Field name made lowercase.
 
@@ -474,9 +464,7 @@ class TCorresp(models.Model):
 
 class TCoti(models.Model):
 
-    pk = models.CompositePrimaryKey('NEcti', 'An', 'typ')
-
-    necti = models.IntegerField(db_column='NEcti')  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti',primary_key=True)
 
     an = models.SmallIntegerField(db_column='An')  # Field name made lowercase.
 
@@ -515,11 +503,9 @@ class TCoti(models.Model):
 
 class TErreurmail(models.Model):
 
-    pk = models.CompositePrimaryKey('Cotisation', 'NumExp')
-
     numexp = models.IntegerField(db_column='NumExp')  # Field name made lowercase.
 
-    cotisation = models.IntegerField(db_column='Cotisation')  # Field name made lowercase.
+    cotisation = models.IntegerField(db_column='Cotisation',primary_key=True)
 
     datemail = models.DateTimeField(db_column='DateMail', blank=True, null=True)  # Field name made lowercase.
 
@@ -710,7 +696,7 @@ class TExpert(models.Model):
 
 class TExprint(models.Model):
 
-    necti = models.IntegerField(db_column='NEcti')  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti',primary_key=True)
 
     pay = models.CharField(db_column='Pay', max_length=3)  # Field name made lowercase.
 
@@ -733,9 +719,7 @@ class TExprint(models.Model):
 
 class TForm(models.Model):
 
-    pk = models.CompositePrimaryKey('NEcti', 'Form')
-
-    necti = models.IntegerField(db_column='NEcti')  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti',primary_key=True)
 
     form = models.CharField(db_column='Form', max_length=3)  # Field name made lowercase.
 
@@ -758,9 +742,7 @@ class TForm(models.Model):
 
 class TLang(models.Model):
 
-    pk = models.CompositePrimaryKey('NEcti', 'Lang')
-
-    necti = models.IntegerField(db_column='NEcti')  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti',primary_key=True)
 
     lang = models.CharField(db_column='Lang', max_length=3)  # Field name made lowercase.
 
@@ -783,9 +765,7 @@ class TLang(models.Model):
 
 class TLienperso(models.Model):
 
-    pk = models.CompositePrimaryKey('CodeServ', 'Exten', 'NumExp', 'DateDebFonc')
-
-    codeserv = models.CharField(db_column='CodeServ', max_length=4)  # Field name made lowercase.
+    codeserv = models.CharField(db_column='CodeServ', max_length=4,primary_key=True)
 
     exten = models.CharField(db_column='Exten', max_length=2)  # Field name made lowercase.
 
@@ -828,9 +808,7 @@ class TLienperso(models.Model):
 
 class TLienserv(models.Model):
 
-    pk = models.CompositePrimaryKey('CodeServ1', 'Exten1', 'CodeServ2', 'Exten2', 'DatOuvLien')
-
-    codeserv1 = models.CharField(db_column='CodeServ1', max_length=4)  # Field name made lowercase.
+    codeserv1 = models.CharField(db_column='CodeServ1', max_length=4,primary_key=True)
 
     exten1 = models.CharField(db_column='Exten1', max_length=2)  # Field name made lowercase.
 
@@ -863,9 +841,7 @@ class TLienserv(models.Model):
 
 class TSitu(models.Model):
 
-    pk = models.CompositePrimaryKey('NumPM', 'RangSitu')
-
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
     rangsitu = models.SmallIntegerField(db_column='RangSitu')  # Field name made lowercase.
 
@@ -961,9 +937,7 @@ class TTva(models.Model):
 
 class TValidationexp(models.Model):
 
-    pk = models.CompositePrimaryKey('Code', 'NumExp')
-
-    numexp = models.IntegerField(db_column='NumExp')  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp',primary_key=True)
 
     code = models.IntegerField(db_column='Code')  # Field name made lowercase.
 
@@ -988,7 +962,7 @@ class TValidationexp(models.Model):
 
 class TVersprv(models.Model):
 
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
     rangsitu = models.SmallIntegerField(db_column='RangSitu')  # Field name made lowercase.
 
@@ -1080,7 +1054,7 @@ class TVersrel(models.Model):
 
 class Tauxtvasitu(models.Model):
 
-    code = models.FloatField()
+    code = models.FloatField(primary_key=True)
 
     taux = models.CharField(max_length=155)
 
@@ -1481,9 +1455,7 @@ class TiAdh(models.Model):
 
 class TiAppelprpa(models.Model):
 
-    pk = models.CompositePrimaryKey('NumPM', 'RangSitu')
-
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
     rangsitu = models.SmallIntegerField(db_column='RangSitu')  # Field name made lowercase.
 
@@ -1518,9 +1490,7 @@ class TiAppelprpa(models.Model):
 
 class TiAppelquest(models.Model):
 
-    pk = models.CompositePrimaryKey('NumPM', 'RangSitu')
-
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
     rangsitu = models.SmallIntegerField(db_column='RangSitu')  # Field name made lowercase.
 
@@ -1575,9 +1545,8 @@ class TiAppelquest(models.Model):
 
 class TiCommetiers(models.Model):
 
-    pk = models.CompositePrimaryKey('NumExp', 'Metier')
 
-    numexp = models.IntegerField(db_column='NumExp')  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp',primary_key=True)
 
     metier = models.CharField(db_column='Metier', max_length=3)  # Field name made lowercase.
 
@@ -1618,9 +1587,7 @@ class TiCommetiers(models.Model):
 
 class TiComspe(models.Model):
 
-    pk = models.CompositePrimaryKey('NumExp', 'Spec')
-
-    numexp = models.IntegerField(db_column='NumExp')  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp',primary_key=True)
 
     spec = models.CharField(db_column='Spec', max_length=3)  # Field name made lowercase.
 
@@ -1715,12 +1682,11 @@ class TiCoti3(models.Model):
 
 
 
-
 class TiCourrielversdlg(models.Model):
 
     unitgestion = models.CharField(db_column='UnitGestion', max_length=5, blank=True, null=True)  # Field name made lowercase.
 
-    codeserv = models.CharField(db_column='CodeServ', max_length=4, blank=True, null=True)  # Field name made lowercase.
+    codeserv = models.CharField(db_column='CodeServ', max_length=4, blank=True, null=True,primary_key=True)
 
     exten = models.CharField(db_column='Exten', max_length=2, blank=True, null=True)  # Field name made lowercase.
 
@@ -1747,7 +1713,7 @@ class TiCourrielversdlg(models.Model):
 
 class TiDept(models.Model):
 
-    dep = models.CharField(db_column='Dep', max_length=2, blank=True, null=True)  # Field name made lowercase.
+    dep = models.CharField(db_column='Dep', max_length=2, blank=True, null=True,primary_key=True)
 
     nomdep = models.CharField(db_column='NomDep', max_length=25, blank=True, null=True)  # Field name made lowercase.
 
@@ -1813,7 +1779,7 @@ class TiDpassvalid(models.Model):
 
 class TiInter(models.Model):
 
-    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True)  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True,primary_key=True)
 
     nlon = models.CharField(db_column='Nlon', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
@@ -1840,7 +1806,7 @@ class TiInter(models.Model):
 
 class TiLang(models.Model):
 
-    necti = models.IntegerField(db_column='NEcti', blank=True, null=True)  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti', blank=True, null=True,primary_key=True)
 
     lang = models.CharField(max_length=255, blank=True, null=True)
 
@@ -1859,7 +1825,7 @@ class TiLang(models.Model):
 
 class TiLang1(models.Model):
 
-    necti = models.IntegerField(db_column='NEcti', blank=True, null=True)  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti', blank=True, null=True,primary_key=True)
 
     langc = models.CharField(max_length=255, blank=True, null=True)
 
@@ -1880,7 +1846,7 @@ class TiLang1(models.Model):
 
 class TiLexp(models.Model):
 
-    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True)  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True,primary_key=True)
 
 
 
@@ -1971,9 +1937,7 @@ class TiMail(models.Model):
 
 class TiMissiondpassvalid(models.Model):
 
-    pk = models.CompositePrimaryKey('NumPM', 'Code_Pays', 'NumMission')
-
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
     code_pays = models.CharField(db_column='Code_Pays', max_length=50)  # Field name made lowercase.
 
@@ -2026,7 +1990,7 @@ class TiParam(models.Model):
 
     debmissmax = models.DateTimeField(db_column='DebMissMax')  # Field name made lowercase.
 
-    datmaj = models.DateTimeField(db_column='DatMAJ')  # Field name made lowercase.
+    datmaj = models.DateTimeField(db_column='DatMAJ',primary_key=True)
 
     datfactmin = models.DateTimeField(db_column='DatFactMin', blank=True, null=True)  # Field name made lowercase.
 
@@ -2047,7 +2011,7 @@ class TiParam(models.Model):
 
 class TiPmnonenrgle(models.Model):
 
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numpm = models.IntegerField(db_column='NumPM',primary_key=True)
 
 
 
@@ -2064,9 +2028,7 @@ class TiPmnonenrgle(models.Model):
 
 class TiRenouvellementCoti(models.Model):
 
-    pk = models.CompositePrimaryKey('NEcti', 'An', 'typ')
-
-    necti = models.IntegerField(db_column='NEcti')  # Field name made lowercase.
+    necti = models.IntegerField(db_column='NEcti',primary_key=True)
 
     an = models.SmallIntegerField(db_column='An')  # Field name made lowercase.
 
@@ -2105,7 +2067,7 @@ class TiRenouvellementCoti(models.Model):
 
 class TiStatutexperttoupdt(models.Model):
 
-    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True)  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True,primary_key=True)
 
 
 
@@ -2122,7 +2084,7 @@ class TiStatutexperttoupdt(models.Model):
 
 class TiTabexp(models.Model):
 
-    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True)  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True,primary_key=True)
 
 
 
@@ -2139,7 +2101,7 @@ class TiTabexp(models.Model):
 
 class TiVisexp(models.Model):
 
-    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True)  # Field name made lowercase.
+    numexp = models.IntegerField(db_column='NumExp', blank=True, null=True,primary_key=True)
 
     nom = models.CharField(db_column='Nom', max_length=27, blank=True, null=True)  # Field name made lowercase.
 

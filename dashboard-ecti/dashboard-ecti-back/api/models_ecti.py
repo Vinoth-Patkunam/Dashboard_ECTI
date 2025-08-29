@@ -17,21 +17,16 @@ from django.db import models
 
 
 
-
 class Categorielucrative(models.Model):
 
-    code = models.CharField(max_length=2, db_collation='utf8mb4_general_ci', blank=True, null=True)
-
+    code = models.CharField(max_length=2, primary_key=True, db_collation='utf8mb4_general_ci')
     libelle = models.CharField(max_length=255, db_collation='utf8mb4_general_ci', blank=True, null=True)
-
-
 
     class Meta:
         app_label = 'ecti'
-
         managed = False
-
         db_table = 'categorielucrative'
+
 
 
 
@@ -39,7 +34,7 @@ class Categorielucrative(models.Model):
 
 class Conventionfiliere(models.Model):
 
-    id = models.IntegerField(blank=True, null=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=100, db_collation='utf8_general_ci', blank=True, null=True)
 
@@ -58,7 +53,7 @@ class Conventionfiliere(models.Model):
 
 class Conventionfonction(models.Model):
 
-    id = models.IntegerField(blank=True, null=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=100, db_collation='utf8_general_ci', blank=True, null=True)
 
@@ -77,7 +72,7 @@ class Conventionfonction(models.Model):
 
 class Conventionnature(models.Model):
 
-    id = models.IntegerField(blank=True, null=True)
+    id = models.IntegerField(primary_key=True)
 
     nomcategorie = models.CharField(db_column='nomCategorie', max_length=50, db_collation='utf8_general_ci', blank=True, null=True)  # Field name made lowercase.
 
@@ -100,7 +95,7 @@ class Conventionnature(models.Model):
 
 class Conventionstatut(models.Model):
 
-    id = models.IntegerField(blank=True, null=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=100, db_collation='utf8_general_ci', blank=True, null=True)
 
@@ -121,7 +116,7 @@ class Conventionstatut(models.Model):
 
 class Conventionsuiviedition(models.Model):
 
-    nummission = models.IntegerField(db_column='NumMission')  # Field name made lowercase.
+    nummission = models.IntegerField(db_column='NumMission', primary_key=True)
 
     numsuivi = models.IntegerField(db_column='NumSuivi')  # Field name made lowercase.
 
@@ -144,7 +139,7 @@ class Conventionsuiviedition(models.Model):
 
 class Correspdelegsage(models.Model):
 
-    codedeleg = models.TextField(db_column='codeDeleg')  # Field name made lowercase.
+    codedeleg = models.TextField(db_column='codeDeleg', primary_key=True)
 
     nom = models.TextField()
 
@@ -165,7 +160,7 @@ class Correspdelegsage(models.Model):
 
 class Correspfichier(models.Model):
 
-    nom = models.TextField()
+    nom = models.TextField(primary_key=True)
 
     chemin = models.TextField()
 
@@ -186,7 +181,7 @@ class Correspfichier(models.Model):
 
 class Devise(models.Model):
 
-    pays = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True)
+    pays = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, primary_key=True)
 
     nom = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True)
 
@@ -209,7 +204,7 @@ class Devise(models.Model):
 
 class Expertmission(models.Model):
 
-    nummission = models.IntegerField(db_column='NumMission', blank=True, null=True)  # Field name made lowercase.
+    nummission = models.IntegerField(db_column='NumMission', primary_key=True) 
 
     numexpert = models.IntegerField(db_column='NumExpert', blank=True, null=True)  # Field name made lowercase.
 
@@ -228,7 +223,7 @@ class Expertmission(models.Model):
 
 class FeedbackConsultant(models.Model):
 
-    mid = models.IntegerField(blank=True, null=True)
+    mid = models.IntegerField(primary_key=True)
 
     consultant_nr = models.IntegerField(blank=True, null=True)
 
@@ -249,7 +244,7 @@ class FeedbackConsultant(models.Model):
 
 class FeedbackFollowup(models.Model):
 
-    mid = models.IntegerField(blank=True, null=True)
+    mid = models.IntegerField(primary_key=True)
 
     c_name = models.CharField(max_length=765, blank=True, null=True)
 
@@ -336,7 +331,7 @@ class Imputationcomptablendf(models.Model):
 
     fraiscompris = models.TextField(db_column='fraisCompris', blank=True, null=True)  # Field name made lowercase.
 
-    codecomptable = models.IntegerField(db_column='codeComptable')  # Field name made lowercase.
+    codecomptable = models.IntegerField(db_column='codeComptable',primary_key=True)
 
     codeassocie = models.IntegerField(db_column='codeAssocie', blank=True, null=True)  # Field name made lowercase.
 
@@ -355,7 +350,7 @@ class Imputationcomptablendf(models.Model):
 
 class Imputationcomptablendfi(models.Model):
 
-    codebusiness = models.TextField(db_column='codeBusiness')  # Field name made lowercase.
+    codebusiness = models.TextField(db_column='codeBusiness', primary_key=True)
 
     libellebusiness = models.TextField(db_column='libelleBusiness')  # Field name made lowercase.
 
@@ -382,7 +377,7 @@ class Imputationcomptablendfi(models.Model):
 
 class Lignedefrais(models.Model):
 
-    idnote = models.IntegerField(db_column='idNote')  # Field name made lowercase.
+    idnote = models.IntegerField(db_column='idNote', primary_key=True)
 
     typedefrais = models.IntegerField()
 
@@ -425,7 +420,7 @@ class Lignedefrais(models.Model):
 
 class Lignedekm(models.Model):
 
-    idnote = models.IntegerField(db_column='idNote')  # Field name made lowercase.
+    idnote = models.IntegerField(db_column='idNote', primary_key=True)
 
     description = models.CharField(max_length=255, blank=True, null=True)
 
@@ -454,7 +449,7 @@ class Lignedekm(models.Model):
 
 class Log(models.Model):
 
-    date = models.DateTimeField()
+    date = models.DateTimeField(primary_key=True)
 
     log = models.CharField(max_length=255)
 
@@ -473,7 +468,7 @@ class Log(models.Model):
 
 class MissionetatTransition(models.Model):
 
-    etat = models.IntegerField()
+    etat = models.IntegerField(primary_key=True)
 
     etat_possible = models.IntegerField()
 
@@ -729,7 +724,7 @@ class Missionsetat(models.Model):
 
 class Motifrejet(models.Model):
 
-    id = models.IntegerField(unique=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=50, db_collation='utf8_general_ci')
 
@@ -843,7 +838,7 @@ class Notedefraisjustificatifs(models.Model):
 
     originalfilename = models.CharField(db_column='originalFilename', max_length=255)  # Field name made lowercase.
 
-    renamedfilename = models.CharField(db_column='renamedFilename', max_length=255)  # Field name made lowercase.
+    renamedfilename = models.CharField(db_column='renamedFilename', max_length=255,primary_key=True)
 
 
 
@@ -860,7 +855,7 @@ class Notedefraisjustificatifs(models.Model):
 
 class Notedefraisplafond(models.Model):
 
-    typefrais = models.IntegerField(db_column='typeFrais')  # Field name made lowercase.
+    typefrais = models.IntegerField(db_column='typeFrais', primary_key=True)
 
     typedepense = models.IntegerField(db_column='typeDepense', blank=True, null=True)  # Field name made lowercase.
 
@@ -883,7 +878,7 @@ class Notedefraisplafond(models.Model):
 
 class Notedefraisrejet(models.Model):
 
-    motifrejet = models.IntegerField(db_column='MotifRejet')  # Field name made lowercase.
+    motifrejet = models.IntegerField(db_column='MotifRejet', primary_key=True)
 
     notedefrais = models.IntegerField(db_column='NoteDeFrais')  # Field name made lowercase.
 
@@ -904,7 +899,7 @@ class Notedefraisrejet(models.Model):
 
 class Notedefraissage(models.Model):
 
-    ligne = models.IntegerField()
+    ligne = models.IntegerField(primary_key=True)
 
     idndf = models.IntegerField(db_column='IdNdf')  # Field name made lowercase.
 
@@ -963,7 +958,7 @@ class Notedefraissage(models.Model):
 
 class Notedefraisstatut(models.Model):
 
-    id = models.IntegerField(unique=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=50, db_collation='utf8_general_ci')
 
@@ -986,7 +981,7 @@ class Notedefraisstatut(models.Model):
 
 class Notedefraistaux(models.Model):
 
-    idtypetaux = models.IntegerField(db_column='idTypeTaux')  # Field name made lowercase.
+    idtypetaux = models.IntegerField(db_column='idTypeTaux',primary_key=True)
 
     datedebut = models.DateTimeField(db_column='DateDebut')  # Field name made lowercase.
 
@@ -1015,7 +1010,7 @@ class Notedefraistaux(models.Model):
 
 class Partenariats(models.Model):
 
-    nom = models.CharField(max_length=65)
+    nom = models.CharField(max_length=65, primary_key=True)
 
     ordre = models.IntegerField()
 
@@ -1034,7 +1029,7 @@ class Partenariats(models.Model):
 
 class Suivikmexpert(models.Model):
 
-    expert = models.IntegerField(db_column='Expert')  # Field name made lowercase.
+    expert = models.IntegerField(db_column='Expert', primary_key=True)
 
     annee = models.IntegerField(db_column='Annee')  # Field name made lowercase.
 
@@ -1106,7 +1101,7 @@ class TmpLignedefrais(models.Model):
 
 class TmpLignedekm(models.Model):
 
-    id = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
 
     numexp = models.IntegerField(db_column='numExp')  # Field name made lowercase.
 
@@ -1141,7 +1136,7 @@ class TmpLignedekm(models.Model):
 
 class TmpNotedefraissage(models.Model):
 
-    ligne = models.IntegerField()
+    ligne = models.IntegerField(primary_key=True)
 
     idndf = models.IntegerField(db_column='IdNdf')  # Field name made lowercase.
 
@@ -1202,7 +1197,7 @@ class TmpNotedefraissage(models.Model):
 
 class Typedefrais(models.Model):
 
-    label = models.CharField(max_length=255)
+    label = models.CharField(max_length=255, primary_key=True)
 
     ordre = models.IntegerField(blank=True, null=True)
 
@@ -1225,7 +1220,7 @@ class Typedefrais(models.Model):
 
 class Typedepense(models.Model):
 
-    id = models.IntegerField(unique=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True)
 
@@ -1246,7 +1241,7 @@ class Typedepense(models.Model):
 
 class Typedetaux(models.Model):
 
-    id = models.IntegerField(unique=True)
+    id = models.IntegerField(primary_key=True)
 
     nom = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True)
 

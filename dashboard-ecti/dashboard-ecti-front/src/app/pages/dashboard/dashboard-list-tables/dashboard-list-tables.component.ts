@@ -1,171 +1,118 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule }     from '@angular/common';
 import { FormsModule }      from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { MultiDbService }   from '../../../services/multidb.service';
+import { CdkTable } from '@angular/cdk/table';
 
-import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
-
-import { MultiDbService } from '../../../services/multidb.service';
-
-// Union littérale pour restreindre aux 4 types voulus
-type MyChartType = 'bar' | 'line' | 'pie' | 'doughnut';
+type MyChartType = 'bar'|'line'|'pie'|'doughnut';
 
 @Component({
   selector: 'app-dashboard-list-tables',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule
-  ],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './dashboard-list-tables.component.html',
   styleUrls: ['./dashboard-list-tables.component.scss']
 })
-export class DashboardListTablesComponent implements OnInit, AfterViewInit {
-  public allTables: string[] = ['notedefrais', 'affectations', 'conventionfilieres'];
-  public searchText: string = '';
-  public filteredTables: string[] = [];
-  public currentTable: string | null = null;
-  public loading: boolean = false;
+export class DashboardListTablesComponent implements OnInit {
+  public allTables:      string[]      = [];
+  public filteredTables: string[]      = [];
+  public searchText = '';
 
-  public chartTypes: MyChartType[] = ['bar', 'line', 'pie', 'doughnut'];
+  public currentTable: string | null = null;
+  public rawData: any[]      = [];
+  public columns: string[]   = [];
+
+  public showChart = false;
+  public chartTypes: MyChartType[] = ['bar','line','pie','doughnut'];
   public selectedChartType: MyChartType = 'bar';
+  public chartLabels:  string[] = [];
+  public chartValues:  number[] = [];
 
   @ViewChild('canvasRef') canvasRef!: ElementRef<HTMLCanvasElement>;
-  private chartInstance: Chart<'bar'|'line'|'pie'|'doughnut'> | null = null;
+  private chartInstance: Chart | null = null;
 
-  constructor(private multiDbService: MultiDbService) {
+  constructor(private svc: MultiDbService) {
     Chart.register(...registerables);
   }
 
   ngOnInit(): void {
-    this.filteredTables = [...this.allTables];
+    this.svc.getApiRoot().subscribe(root => {
+      this.allTables      = Object.keys(root);
+      this.filteredTables = [...this.allTables];
+    });
   }
 
-  ngAfterViewInit(): void {}
-
-  public onSearchTextChange(): void {
+  onSearchTextChange() {
     const txt = this.searchText.trim().toLowerCase();
     this.filteredTables = txt
-      ? this.allTables.filter(tbl => tbl.toLowerCase().includes(txt))
+      ? this.allTables.filter(t => t.toLowerCase().includes(txt))
       : [...this.allTables];
   }
-
-  public onTableClick(tableName: string): void {
-    this.currentTable = tableName;
-    this.buildChartForTable();
-  }
-
-  public onChartTypeChange(newType: MyChartType): void {
-    this.selectedChartType = newType;
-    if (this.currentTable) {
-      this.buildChartForTable();
-    }
-  }
-
-  private buildChartForTable(): void {
-    if (!this.currentTable) return;
-    this.loading = true;
-
-    this.multiDbService.getData<any>(this.currentTable).subscribe(
-      rawData => {
-        const aggregation: Map<string, number> = new Map();
-        rawData.forEach(item => {
-          const dateVal = item['datesaisie'] || item['date_saisie'] || null;
-          const montantVal = item['montantpaye'] || item['montant_paye'] || 1;
-          if (!dateVal) return;
-
-          let mois: string;
-          if (typeof dateVal === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(dateVal)) {
-            mois = dateVal.slice(0, 7);
-          } else {
-            mois = dateVal.toString();
-          }
-
-          const num = parseFloat(montantVal);
-          if (isNaN(num)) return;
-          const prev = aggregation.get(mois) ?? 0;
-          aggregation.set(mois, prev + num);
-        });
-
-        const labels = Array.from(aggregation.keys()).sort();
-        const values = labels.map(lbl => aggregation.get(lbl)!);
-
-        if (this.chartInstance) {
-          this.chartInstance.destroy();
-          this.chartInstance = null;
-        }
-
-        const config: ChartConfiguration<'bar'|'line'|'pie'|'doughnut'> = {
-          type: this.selectedChartType,
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                data: values,
-                label: `Données (${this.currentTable})`,
-                backgroundColor: this.getRandomColors(labels.length),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            scales: (this.selectedChartType === 'bar' || this.selectedChartType === 'line')
-              ? {
-                  x: { title: { display: true, text: 'Mois (YYYY-MM)' } },
-                  y: { beginAtZero: true, title: { display: true, text: 'Valeur' } }
-                }
-              : {},
-            plugins: {
-              legend: { display: true, position: 'top' },
-              tooltip: {
-                callbacks: {
-                  label: ctx => {
-                    const raw = (ctx.parsed as any).y ?? ctx.parsed;
-                    const fmt = (typeof raw === 'number')
-                      ? raw.toLocaleString('fr-FR', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })
-                      : raw;
-                    return this.selectedChartType === 'pie' || this.selectedChartType === 'doughnut'
-                      ? `${ctx.label}: ${fmt}`
-                      : `€ ${fmt}`;
-                  }
-                }
-              }
-            }
-          }
-        };
-
-        setTimeout(() => {
-  const ctx = this.canvasRef?.nativeElement?.getContext('2d');
-  if (ctx) {
-    this.chartInstance = new Chart(ctx, config);
-  }
-  this.loading = false;
-});
-
-
-        this.loading = false;
-      },
-      err => {
-        console.error(`Erreur récupération données pour "${this.currentTable}" :`, err);
-        this.loading = false;
+  onTableClick(table: string) {
+    this.currentTable = table;
+    this.showChart    = false;
+    this.rawData      = [];
+    this.columns      = [];
+    // charger les données brutes
+    this.svc.getData<any>(table).subscribe(data => {
+      this.rawData = data;
+      if (data.length) {
+        this.columns = Object.keys(data[0]);
       }
-    );
+    });
   }
 
-  private getRandomColors(count: number): string[] {
-    const cols: string[] = [];
-    for (let i = 0; i < count; i++) {
-      const r = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
-      const g = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
-      const b = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
-      cols.push(`#${r}${g}${b}`);
-    }
-    return cols;
+  onShowChart() {
+    this.showChart = true;
+    this.buildChart();
+  }
+
+  onChartTypeChange(t: MyChartType) {
+    this.selectedChartType = t;
+    if (this.showChart) this.buildChart();
+  }
+
+  private buildChart() {
+    if (!this.currentTable) return;
+    // re-agréger sur datesaisie / montantpaye si présents
+    const agg = new Map<string,number>();
+    this.rawData.forEach(item => {
+      const d = item['datesaisie']||item['date_saisie'];
+      const m = parseFloat(item['montantpaye']||item['montant_paye']||'0');
+      if (!d || isNaN(m)) return;
+      const month = (typeof d=='string' && /^\d{4}-\d{2}-\d{2}/.test(d))
+        ? d.slice(0,7)
+        : d.toString();
+      agg.set(month, (agg.get(month)||0)+m);
+    });
+
+    this.chartLabels = Array.from(agg.keys()).sort();
+    this.chartValues = this.chartLabels.map(l => agg.get(l)!);
+
+    // détruire ancien chart
+    this.chartInstance?.destroy();
+
+    const cfg: ChartConfiguration = {
+      type: this.selectedChartType,
+      data: {
+        labels: this.chartLabels,
+        datasets: [{
+          label: `Données (${this.currentTable})`,
+          data: this.chartValues,
+          backgroundColor: this.chartLabels.map(_=>`rgba(75,192,192,0.5)`),
+          borderColor: `rgba(75,192,192,1)`,
+          borderWidth: 1
+        }]
+      },
+      options: { responsive:true }
+    };
+
+    // petit setTimeout pour être sûr que canvas est là
+    setTimeout(()=>{
+      const ctx = this.canvasRef.nativeElement.getContext('2d')!;
+      this.chartInstance = new Chart(ctx, cfg);
+    },0);
   }
 }

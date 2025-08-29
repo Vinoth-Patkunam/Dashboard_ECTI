@@ -70,41 +70,35 @@ class Fonction(models.Model):
 
 class Naf24(models.Model):
 
-    pk = models.CompositePrimaryKey('Cod_div', 'NAF_Group')
+    cod_div   = models.CharField(db_column='Cod_div',   max_length=2)
 
-    cod_div = models.CharField(db_column='Cod_div', max_length=2)  # Field name made lowercase.
+    naf_group = models.CharField(db_column='NAF_Group', max_length=2)
 
-    naf_group = models.CharField(db_column='NAF_Group', max_length=2)  # Field name made lowercase.
+    libel4    = models.CharField(db_column='Libel4', max_length=100, blank=True, null=True)
 
-    libel4 = models.CharField(db_column='Libel4', max_length=100, blank=True, null=True)  # Field name made lowercase.
-
+    cod_div_pk = models.CharField(db_column='Cod_div', max_length=2, primary_key=True, editable=False)
 
 
     class Meta:
         app_label = 'tstatic'
-
         managed = False
-
         db_table = 'naf_24'
-
+        unique_together = (('cod_div', 'naf_group'),)
 
 
 
 
 class Naf25(models.Model):
 
-    pk = models.CompositePrimaryKey('Cod_div', 'NAF_Group', 'NAF_NAF')
+    cod_div   = models.CharField(db_column='Cod_div',   max_length=2)
 
-    cod_div = models.CharField(db_column='Cod_div', max_length=2)  # Field name made lowercase.
+    naf_group = models.CharField(db_column='NAF_Group', max_length=2)
 
-    naf_group = models.CharField(db_column='NAF_Group', max_length=2)  # Field name made lowercase.
+    naf_naf   = models.CharField(db_column='NAF_NAF',   max_length=1)
 
-    naf_naf = models.CharField(db_column='NAF_NAF', max_length=1)  # Field name made lowercase.
+    libel5    = models.CharField(db_column='Libel5', max_length=130, blank=True, null=True)
 
-    libel5 = models.CharField(db_column='Libel5', max_length=130, blank=True, null=True)  # Field name made lowercase.
-
-    codnaf = models.CharField(db_column='CodNAF', unique=True, max_length=5, blank=True, null=True)  # Field name made lowercase.
-
+    codnaf    = models.CharField(db_column='CodNAF', max_length=5, blank=True, null=True, primary_key=True)
 
 
     class Meta:
@@ -187,42 +181,41 @@ class NafRev2(models.Model):
 
 class TContact(models.Model):
 
-    pk = models.CompositePrimaryKey('NumPM', 'NumCor', 'DateContact')
+    numpm       = models.IntegerField(db_column='NumPM')
 
-    numpm = models.IntegerField(db_column='NumPM')  # Field name made lowercase.
+    numcor      = models.IntegerField(db_column='NumCor')
 
-    numcor = models.IntegerField(db_column='NumCor')  # Field name made lowercase.
+    datecontact = models.DateTimeField(db_column='DateContact')
 
-    datecontact = models.DateTimeField(db_column='DateContact')  # Field name made lowercase.
+    rsum        = models.TextField(db_column='Rsum')
 
-    rsum = models.TextField(db_column='Rsum')  # Field name made lowercase.
-
+    numpm_pk = models.IntegerField(db_column='NumPM', primary_key=True, editable=False)
 
 
     class Meta:
+
         app_label = 'tstatic'
 
         managed = False
 
         db_table = 't_contact'
 
+        unique_together = (('numpm', 'numcor', 'datecontact'),)
 
 
 
 
 class TServicescourriels(models.Model):
 
-    pk = models.CompositePrimaryKey('CodeServ', 'Exten')
+    codeserv  = models.CharField(db_column='CodeServ', max_length=4)
 
-    codeserv = models.CharField(db_column='CodeServ', max_length=4)  # Field name made lowercase.
+    exten     = models.CharField(db_column='Exten',    max_length=2)
 
-    exten = models.CharField(db_column='Exten', max_length=2)  # Field name made lowercase.
+    envoyeur  = models.CharField(db_column='Envoyeur', max_length=50, blank=True, null=True)
 
-    envoyeur = models.CharField(db_column='Envoyeur', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    stopenvoi = models.IntegerField(db_column='StopEnvoi', blank=True, null=True)
 
-    stopenvoi = models.IntegerField(db_column='StopEnvoi', blank=True, null=True)  # Field name made lowercase.
-
-
+    codeserv_pk = models.CharField(db_column='CodeServ', max_length=4, primary_key=True, editable=False)
 
     class Meta:
         app_label = 'tstatic'
@@ -294,13 +287,11 @@ class TcCatgorie(models.Model):
 
 class TcCodpostal(models.Model):
 
-    pk = models.CompositePrimaryKey('Cp', 'Ville')
+    cp    = models.CharField(db_column='Cp',    max_length=5)
 
-    cp = models.CharField(db_column='Cp', max_length=5)  # Field name made lowercase.
+    ville = models.CharField(db_column='Ville', max_length=35)
 
-    ville = models.CharField(db_column='Ville', max_length=35)  # Field name made lowercase.
-
-
+    cp_pk = models.CharField(db_column='Cp', max_length=5, primary_key=True, editable=False)
 
     class Meta:
         app_label = 'tstatic'
@@ -308,6 +299,8 @@ class TcCodpostal(models.Model):
         managed = False
 
         db_table = 'tc_codpostal'
+
+        unique_together = (('cp', 'ville'),)
 
 
 
@@ -355,17 +348,15 @@ class TcCotis(models.Model):
 
 class TcDep(models.Model):
 
-    pk = models.CompositePrimaryKey('CodPay', 'CodDep')
+    codpay = models.CharField(db_column='CodPay', max_length=3)
 
-    codpay = models.CharField(db_column='CodPay', max_length=3)  # Field name made lowercase.
+    coddep = models.CharField(db_column='CodDep', max_length=2)
 
-    coddep = models.CharField(db_column='CodDep', max_length=2)  # Field name made lowercase.
+    nomdep = models.CharField(db_column='NomDep', max_length=50, blank=True, null=True)
 
-    nomdep = models.CharField(db_column='NomDep', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    codreg = models.CharField(db_column='CodReg', max_length=2, blank=True, null=True)
 
-    codreg = models.CharField(db_column='CodReg', max_length=2, blank=True, null=True)  # Field name made lowercase.
-
-
+    codpay_pk = models.CharField(db_column='CodPay', max_length=3, primary_key=True, editable=False)
 
     class Meta:
         app_label = 'tstatic'
@@ -373,7 +364,8 @@ class TcDep(models.Model):
         managed = False
 
         db_table = 'tc_dep'
-
+        
+        unique_together = (('codpay', 'coddep'),)
 
 
 

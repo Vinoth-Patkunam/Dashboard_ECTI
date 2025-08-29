@@ -134,10 +134,23 @@ from .models_ecti import Typedepense
 from .models_ecti import Typedetaux
 
 
+from rest_framework import serializers
+from .models_tablecti import Affectations
+
 class AffectationsSerializer(serializers.ModelSerializer):
+    CodeServA  = serializers.CharField(source='codeserva')
+    ExtenA     = serializers.CharField(source='extena')
+    IndiceA    = serializers.IntegerField(source='indicea', required=False)
+    Code3A     = serializers.CharField(source='code3a')
+    Depar      = serializers.CharField(source='depar')
+    CodPos     = serializers.CharField(source='codpos')
+    DatOuvL    = serializers.DateTimeField(source='datouvl')
+    DatOuvAff  = serializers.DateTimeField(source='datouvaff')
+    DatClotAff = serializers.DateTimeField(source='datclotaff', required=False, allow_null=True)
+
     class Meta:
-        model = Affectations
-        fields = '__all__'
+        model  = Affectations
+        fields = ['CodeServA','ExtenA','IndiceA','Code3A','Depar','CodPos','DatOuvL','DatOuvAff','DatClotAff']
 
 
 class CategorielucrativeSerializer(serializers.ModelSerializer):
@@ -927,3 +940,7 @@ class TypedetauxSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TiLangSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = TiLang
+        fields = '__all__'

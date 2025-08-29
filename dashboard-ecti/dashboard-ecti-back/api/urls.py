@@ -129,6 +129,16 @@ from .views import (
     TypedepenseViewSet,
     TypedetauxViewSet,
 )
+from django.urls import path, include
+from rest_framework import routers
+from django.urls import path
+from .views_stats import (
+    stats_affectations_par_departement,
+    stats_affectations_par_annee,
+    stats_km_par_annee,
+    stats_dashboard_all,
+    stats_debug_tables,
+)
 
 router = DefaultRouter()
 router.register(r'affectations', AffectationsViewSet, basename='affectations')
@@ -259,4 +269,14 @@ router.register(r'typedefraiss', TypedefraisViewSet, basename='typedefraiss')
 router.register(r'typedepenses', TypedepenseViewSet, basename='typedepenses')
 router.register(r'typedetauxs', TypedetauxViewSet, basename='typedetauxs')
 
-urlpatterns = router.urls
+# graphique
+
+urlpatterns = [
+    path("stats/affectations-par-dep/",   stats_affectations_par_departement),
+    path("stats/affectations-par-annee/", stats_affectations_par_annee),
+    path("stats/km-par-annee/",           stats_km_par_annee),
+    path("stats/dashboard/",              stats_dashboard_all),
+    path("stats/_debug/tables/",          stats_debug_tables),
+]
+
+
